@@ -7,6 +7,7 @@ function GitSetup(){
   #git setup
   git config --global user.name "Jerry"
   git config --global user.email "Jerry981028@gmail.com"
+  git config --global push.default simple
   sed -i 's/https:\/\/github.com\//git@github.com:/g' ./.git/config
   git add .
   git commit
