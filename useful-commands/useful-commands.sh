@@ -14,6 +14,7 @@ function GitSetup(){
   git push
 }
 function SystemControl(){
+  #service network-manager restart
   #wifi led blink off
   echo none > /sys/class/leds/phy0-led/trigger
   #cpufreq-set
