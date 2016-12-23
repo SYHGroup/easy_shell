@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+if [ "$1" == "-h" ] ; then
+echo "cat-finite [文件名] [终止行数(默认none)] [显示行数(默认50，留空)]"
+exit 0
+fi
+file="$1"
+eof="$2"
+lines="$3"
+if [ "$eof" == "" ] || [ "$eof" == "none" ] ; then
+eof=$(sed -n '$=' ${file})
+fi
+if (( ${eof} < 2 )) ; then
+echo "终止行数过小"
+exit 0
+fi
+if [ "$lines" == "" ] ; then
+lines=50
+fi
+if (( ${eof} > ${lines} )) ; then
+(( sof=${eof} - ${lines} ))
+else
+sof=1
+fi
+sed -n "${sof},${eof}p" ${file}
+echo "当前文件:${file}	行${sof}到${eof}"
+#cut -d$'\n' -f4-5 ${file}
+exit 0
