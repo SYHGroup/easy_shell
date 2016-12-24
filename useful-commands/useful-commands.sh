@@ -29,5 +29,9 @@ function SystemControl(){
   #original uuid = 7651122e-84c1-4e85-956b-4860651fb019 (/dev/sda3)
   tune2fs -U 735a2fd3-9425-4ddd-9c91-a57e3ebbaeff /dev/sdb2
   #apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 2D87398A
+  export http_proxy="127.0.0.1:1081"
+  unset http_proxy
+  export ftp_proxy="127.0.0.1:1081"
+  unset ftp_proxy
 }
 exit 0
