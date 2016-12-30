@@ -18,6 +18,7 @@ function SystemControl(){
   #service network-manager restart
   #wifi led blink off
   echo none > /sys/class/leds/phy0-led/trigger
+  echo 1 > /sys/class/leds/phy0-led/brightness
   #cpufreq-set
   #apt install cpufrequtils
   cpufreq-set -c 0 -u 800000
