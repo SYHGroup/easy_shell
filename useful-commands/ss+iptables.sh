@@ -67,7 +67,7 @@ echo "用法:
 	update	更新路由表
 	start	配置iptables
 	stop	取消配置iptables
-	restart		重新配置iptables"
+	restart	重新配置iptables"
 ;;
 esac
 exit 0
