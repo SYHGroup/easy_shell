@@ -12,13 +12,15 @@ fi
 function Start(){
 # Setup the ipset
 ipset -N chnroute hash:net maxelem 65536
-for ip in $(cat 'chnroute.list'); do
-  ipset add chnroute $ip
+echo -e "配置iptables中，请稍候...\c"
+for Ip in $(cat 'chnroute.list'); do
+  ipset add chnroute $Ip
 done
+echo -e "完成"
 # Setup iptables
 iptables -t nat -N SHADOWSOCKS
 # Allow connection to the server
-iptables -t nat -A SHADOWSOCKS -d 192.168.1.100 -j RETURN
+iptables -t nat -A SHADOWSOCKS -d 104.156.230.63 -j RETURN
 # Allow connection to reserved networks
 iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN
