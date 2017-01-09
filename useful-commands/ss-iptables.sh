@@ -33,6 +33,10 @@ ss-redir -c "$ssconfig" -f shadowsocks.pid
 #Get ip from domain
 serverip=`ping ${ssdomain} -s 1 -c 1 | grep ${ssdomain} | head -n 1`
 serverip=`echo ${serverip} | cut -d'(' -f 2 | cut -d')' -f1`
+if [ "$serverip" == "" ] ; then
+	echo "错误：查找服务器ip失败，检查网络连接"
+	exit 1
+fi
 ss-nat -s $serverip -l $localport -i chnroute.list -o
 }
 function Stop(){
