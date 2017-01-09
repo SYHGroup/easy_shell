@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 function Update(){
 echo -e "正在下载acl，请稍候...\c"
-wget https://raw.githubusercontent.com/shadowsocks/shadowsocks-android/master/src/main/assets/acl/china-list.acl -O bypasschina.cal
+wget https://raw.githubusercontent.com/shadowsocks/shadowsocks-android/master/src/main/assets/acl/china-list.acl -O bypasschina.acl
 echo "完成"
 }
 function Checkroot(){
