@@ -67,6 +67,23 @@ Stop
 service networking restart
 Start
 ;;
+"")
+Checkenv
+if [ -f shadowsocks.pid ] ; then
+	PID=`cat shadowsocks.pid`
+	ss_started=`ps -aux |grep "$PID" |grep -o ss-redir`
+	if [ "$ss_started"=="ss-redir" ] ; then
+		echo "关闭中..."
+	else
+		echo "上次未正常退出，但仍然启动..."
+		Start
+	fi
+else
+	echo "启动中..."
+	Start
+fi
+read -p "回车键退出"
+;;
 *)
 echo "用法:
 	update	更新路由表
