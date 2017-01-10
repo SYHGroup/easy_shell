@@ -72,10 +72,12 @@ Checkenv
 if [ -f shadowsocks.pid ] ; then
 	PID=`cat shadowsocks.pid`
 	ss_started=`ps -aux |grep "$PID" |grep -o ss-redir`
-	if [ "$ss_started"=="ss-redir" ] ; then
+	if [ "$ss_started" == "ss-redir" ] ; then
 		echo "关闭中..."
+		Stop
 	else
 		echo "上次未正常退出，但仍然启动..."
+		ss-nat -f
 		Start
 	fi
 else
