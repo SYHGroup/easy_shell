@@ -1,0 +1,2 @@
+# easyshell/shadowsocks
+	旨在分享linux下使用shadowsocks的经验
