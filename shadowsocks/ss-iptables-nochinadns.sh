@@ -3,7 +3,6 @@
 localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
-chinadnsdir="/home/jerry/files/chinadns-1.3.2"
 #############################
 function ErrorSolve(){
 if [ $IS_TERMINAL ] ; then
@@ -18,7 +17,7 @@ if [ ! -f chnroute.tmp ] ; then
 	echo "错误：路由表下载失败，检查网络连接"
 	ErrorSolve
 fi
-cat chnroute.tmp | grep ipv4 | grep CN | awk -F\| '{ printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > chnroute.txt
+cat chnroute.tmp | grep ipv4 | grep CN | awk -F\| '{ printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > chnroute.list
 rm chnroute.tmp
 }
 function Checkenv(){
@@ -30,7 +29,7 @@ if [ ! -f "$ssconfig" ] ; then
 	echo "错误：配置文件${ssconfig}不存在"
 	ErrorSolve
 fi
-if [ ! -f chnroute.txt ] ; then
+if [ ! -f chnroute.list ] ; then
 Update
 fi
 }
@@ -44,25 +43,12 @@ if [ "$serverip" == "" ] ; then
 fi
 #Start ss client
 ss-redir -c "$ssconfig" -f shadowsocks.pid
-ss-nat -s $serverip -l $localport -i chnroute.txt -o
-#Start chinadns
-cd "$chinadnsdir"
-#src/chinadns -m -p 5354 -c ${SCRIPTPATH}/chnroute.txt -v > ${SCRIPTPATH}/chinadns.log &
-nohup src/chinadns \
-	-s 208.67.222.222:443,8.8.8.8,223.5.5.5 \
-	-m \
-	-p 5354 \
-	-c ${SCRIPTPATH}/chnroute.txt \
-	-v > ${SCRIPTPATH}/chinadns.log &
-cd "$SCRIPTPATH"
-echo "$!" > chinadns.pid
+ss-nat -s $serverip -l $localport -i chnroute.list -o
 }
 function Stop(){
 ss-nat -f
 kill `cat shadowsocks.pid`
 rm shadowsocks.pid
-kill `cat chinadns.pid`
-rm chinadns.pid
 }
 #主进程开始
 SCRIPT=$(readlink -f "$0")
