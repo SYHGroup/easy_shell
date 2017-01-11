@@ -4,12 +4,18 @@ localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
 #############################
+function ErrorSolve(){
+if [ $IS_TERMINAL ] ; then
+read -n 1 -t 5 -p "发生错误，等待5秒或任意键退出"
+fi
+exit 1
+}
 function Update(){
-echo -e "下载路由表"
+echo "下载路由表"
 wget -O chnroute.tmp 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest'
 if [ ! -f chnroute.tmp ] ; then
 	echo "错误：路由表下载失败，检查网络连接"
-	exit 1
+	ErrorSolve
 fi
 cat chnroute.tmp | grep ipv4 | grep CN | awk -F\| '{ printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > chnroute.list
 rm chnroute.tmp
@@ -17,11 +23,11 @@ rm chnroute.tmp
 function Checkenv(){
 if [[ $EUID != "0" ]] ; then
 	echo "错误：设置iptables需要root权限"
-	exit 1
+	ErrorSolve
 fi
 if [ ! -f "$ssconfig" ] ; then
 	echo "错误：配置文件${ssconfig}不存在"
-	exit 1
+	ErrorSolve
 fi
 if [ ! -f chnroute.list ] ; then
 Update
@@ -33,7 +39,7 @@ serverip=`ping ${ssdomain} -s 1 -c 1 -W 2 | grep ${ssdomain} | head -n 1`
 serverip=`echo ${serverip} | cut -d'(' -f 2 | cut -d')' -f1`
 if [ "$serverip" == "" ] ; then
 	echo "错误：查找服务器ip失败，检查网络连接"
-	exit 1
+	ErrorSolve
 fi
 #Start ss client
 ss-redir -c "$ssconfig" -f shadowsocks.pid
@@ -68,6 +74,7 @@ service networking restart
 Start
 ;;
 "")
+IS_TERMINAL=1
 Checkenv
 if [ -f shadowsocks.pid ] ; then
 	PID=`cat shadowsocks.pid`
@@ -84,7 +91,7 @@ else
 	echo "启动中..."
 	Start
 fi
-read -p "回车键退出"
+read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
 *)
 echo "用法:
