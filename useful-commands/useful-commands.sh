@@ -14,8 +14,8 @@ function GitSetup(){
   git push
 }
 function SystemControl(){
-   chattr +i /etc/resolv.conf
-   chattr -i /etc/resolv.conf
+  chattr +i /etc/resolv.conf
+  chattr -i /etc/resolv.conf
   #apt install gnome-disk-utility
   #service network-manager restart
   #wifi led blink off
