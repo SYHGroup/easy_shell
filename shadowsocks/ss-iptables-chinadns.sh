@@ -3,6 +3,7 @@
 localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
+chinadnsdir="/home/jerry/files/chinadns-1.3.2"
 #############################
 function ErrorSolve(){
 if [ $IS_TERMINAL ] ; then
@@ -44,11 +45,24 @@ fi
 #Start ss client
 ss-redir -c "$ssconfig" -f shadowsocks.pid
 ss-nat -s $serverip -l $localport -i chnroute.txt -o
+#Start chinadns
+cd "$chinadnsdir"
+#src/chinadns -m -p 5354 -c ${SCRIPTPATH}/chnroute.txt -v > ${SCRIPTPATH}/chinadns.log &
+nohup src/chinadns \
+	-s 208.67.222.222:443,8.8.8.8,223.5.5.5 \
+	-m \
+	-p 5354 \
+	-c ${SCRIPTPATH}/chnroute.txt \
+	-v > ${SCRIPTPATH}/chinadns.log &
+cd "$SCRIPTPATH"
+echo "$!" > chinadns.pid
 }
 function Stop(){
 ss-nat -f
 kill `cat shadowsocks.pid`
 rm shadowsocks.pid
+kill `cat chinadns.pid`
+rm chinadns.pid
 }
 #主进程开始
 SCRIPT=$(readlink -f "$0")
