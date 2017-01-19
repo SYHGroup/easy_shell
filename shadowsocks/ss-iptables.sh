@@ -3,6 +3,7 @@
 localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
+FANCYDISPLAY=1	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
 if [ $IS_TERMINAL ] ; then
@@ -91,6 +92,7 @@ else
 	echo "启动中..."
 	Start
 fi
+if [ $FANCYDISPLAY ] ; then
 echo "                                   
                                  CO
                               Ls40a
@@ -111,6 +113,7 @@ echo "
                 Ta4e               
                 T0                 
                 O                  "
+fi
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
 *)
