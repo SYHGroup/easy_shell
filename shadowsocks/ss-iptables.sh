@@ -91,6 +91,26 @@ else
 	echo "启动中..."
 	Start
 fi
+echo "                                   
+                                 CO
+                              Ls40a
+                          e088S4S8C
+                       O48S88STT84 
+                   Ca4SS48SSTTTT4O 
+                L08S88SSSSs4UTTS8  
+            3s44S4STTS48ssSUTTT4Y  
+         es4888STTTS48sL4STTTTTS3  
+     3O0484STTTTTS44s1aSSTTTTT80   
+ 3Y44S48STTTTTTS44s e44TTTTTTT8e   
+ tO08SS48STTTS44Y  a8STTTTTTTS4    
+     7sa48SS44Y  O44TTTTTTTTT4Y    
+          3YO   Y4088STTTTTTT8?    
+                lL0448SS848S4s     
+                0ast  2O008842     
+                Saa0C       3      
+                Ta4e               
+                T0                 
+                O                  "
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
 *)
