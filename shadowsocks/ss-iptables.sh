@@ -94,7 +94,7 @@ else
 	Start
 fi
 if [ $FANCYDISPLAY ] ; then
-echo "                                   
+echo -e "\e[1;34m                                   
                                  CO
                               Ls40a
                           e088S4S8C
@@ -113,7 +113,7 @@ echo "
                 Saa0C       3      
                 Ta4e               
                 T0                 
-                O                  "
+                O                  \e[0m"
 fi
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
