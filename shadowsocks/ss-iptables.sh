@@ -3,6 +3,7 @@
 localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
+sstool="ss-nat"
 FANCYDISPLAY=1	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
@@ -37,17 +38,17 @@ fi
 function Start(){
 #Get ip from domain
 serverip=`ping ${ssdomain} -s 1 -c 1 -W 2 | grep ${ssdomain} | head -n 1`
-serverip=`echo ${serverip} | cut -d'(' -f 2 | cut -d')' -f1`
+serverip=`echo ${serverip} | cut -d'(' -f 2 | cut -d')' -f 1`
 if [ "$serverip" == "" ] ; then
 	echo "错误：查找服务器ip失败，检查网络连接"
 	ErrorSolve
 fi
 #Start ss client
 ss-redir -c "$ssconfig" -f shadowsocks.pid
-ss-nat -s $serverip -l $localport -i chnroute.txt -o
+$sstool -s $serverip -l $localport -i chnroute.txt -o
 }
 function Stop(){
-ss-nat -f
+$sstool -f
 kill `cat shadowsocks.pid`
 rm shadowsocks.pid
 }
@@ -85,7 +86,7 @@ if [ -f shadowsocks.pid ] ; then
 		Stop
 	else
 		echo "上次未正常退出，但仍然启动..."
-		ss-nat -f
+		$sstool -f
 		Start
 	fi
 else
