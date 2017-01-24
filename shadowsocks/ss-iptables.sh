@@ -36,7 +36,9 @@ if [ ! -f chnroute.txt ] ; then
 Update
 fi
 if [ $USE_CHINADNS == 1 ] ; then
-	echo "使用chinadns"
+	echo -e -n "\e[1;32m使用chinadns...... \e[0m"
+else
+	echo -e -n "\e[1;34m不使用chinadns......\e[0m"
 fi
 }
 function Start(){
