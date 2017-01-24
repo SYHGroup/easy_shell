@@ -20,7 +20,7 @@ case "$1" in
     echo -n "Starting $DESC: "
     $DAEMON \
         -m \
-	-b 127.0.1.1 \
+	-b 127.0.0.2 \
 	-p 53 \
         -c /var/share/chnroute.txt \
 	-v \
