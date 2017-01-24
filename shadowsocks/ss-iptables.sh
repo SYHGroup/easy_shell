@@ -4,6 +4,7 @@ localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="/etc/shadowsocks-libev/config-client.json"
 sstool="ss-nat"
+USE_CHINADNS=0
 FANCYDISPLAY=1	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
@@ -34,6 +35,15 @@ fi
 if [ ! -f chnroute.txt ] ; then
 Update
 fi
+if [ $USE_CHINADNS == 0 ]
+then
+	echo "不使用chinadns"
+elif [ $USE_CHINADNS == 1 ]
+	echo "使用chinadns"
+else
+	echo "chinadns参数设置错误(1/0)"
+	ErrorSolve
+fi
 }
 function Start(){
 #Get ip from domain
@@ -46,11 +56,18 @@ fi
 #Start ss client
 ss-redir -c "$ssconfig" -f shadowsocks.pid
 $sstool -s $serverip -l $localport -i chnroute.txt -o
+#Start chinadns if necessary
+if [ $USE_CHINADNS ] ; then
+service chinadns start
+fi
 }
 function Stop(){
 $sstool -f
 kill `cat shadowsocks.pid`
 rm shadowsocks.pid
+if [ $USE_CHINADNS ] ; then
+service chinadns stop
+fi
 }
 #主进程开始
 SCRIPT=$(readlink -f "$0")
@@ -72,7 +89,8 @@ Stop
 restart)
 Checkenv
 Stop
-service networking restart
+#service networking restart
+systemctl restart networking
 Start
 ;;
 "")
