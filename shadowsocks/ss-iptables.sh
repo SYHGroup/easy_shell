@@ -35,14 +35,8 @@ fi
 if [ ! -f chnroute.txt ] ; then
 Update
 fi
-if [ $USE_CHINADNS == 0 ]
-then
-	echo "不使用chinadns"
-elif [ $USE_CHINADNS == 1 ]
+if [ $USE_CHINADNS ] ; then
 	echo "使用chinadns"
-else
-	echo "chinadns参数设置错误(1/0)"
-	ErrorSolve
 fi
 }
 function Start(){
