@@ -4,3 +4,6 @@
 [submodule "ddns/CloudXNS-DDNS"]
 	path = ddns/CloudXNS-DDNS
 	url = https://github.com/SYHGroup/CloudXNS-DDNS
+[submodule "oh-my-termux"]
+	path = oh-my-termux
+	url = https://github.com/SYHGroup/oh-my-termux
