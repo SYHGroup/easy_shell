@@ -2,7 +2,7 @@
 ####Change your personal settings####
 localport="1080"
 ssdomain="ipv4.jerry981028.ml"
-ssconfig="/etc/shadowsocks-libev/config-client.json"
+ssconfig="config-client"	#完整路径为/etc/shadowsocks-libev/config-client.json
 sstool="ss-nat"
 USE_CHINADNS=0
 FANCYDISPLAY=1	#用于在终端中画出一个小飞机图标
@@ -28,8 +28,8 @@ if [[ $EUID != "0" ]] ; then
 	echo "错误：设置iptables需要root权限"
 	ErrorSolve
 fi
-if [ ! -f "$ssconfig" ] ; then
-	echo "错误：配置文件${ssconfig}不存在"
+if [ ! -f "/etc/shadowsocks-libev/${ssconfig}.json" ] ; then
+	echo "错误：配置文件/etc/shadowsocks-libev/${ssconfig}.json不存在"
 	ErrorSolve
 fi
 if [ ! -f chnroute.txt ] ; then
@@ -49,21 +49,22 @@ if [ "$serverip" == "" ] ; then
 	echo "错误：查找服务器ip失败，检查网络连接"
 	ErrorSolve
 fi
+touch /run/ss-iptables.lock
 #Start ss client
-ss-redir -c "$ssconfig" -f shadowsocks.pid
+systemctl start shadowsocks-libev-redir@"$ssconfig".service
 $sstool -s $serverip -l $localport -i chnroute.txt -o
 #Start chinadns if necessary
 if [ $USE_CHINADNS == 1 ] ; then
-service chinadns start
+systemctl start chinadns.service
 fi
 }
 function Stop(){
 $sstool -f
-kill `cat shadowsocks.pid`
-rm shadowsocks.pid
+systemctl stop shadowsocks-libev-redir@"$ssconfig".service
 if [ $USE_CHINADNS == 1 ] ; then
-service chinadns stop
+systemctl stop chinadns.service
 fi
+rm /run/ss-iptables.lock
 }
 #主进程开始
 SCRIPT=$(readlink -f "$0")
@@ -85,24 +86,15 @@ Stop
 restart)
 Checkenv
 Stop
-#service networking restart
 systemctl restart networking
 Start
 ;;
 "")
 IS_TERMINAL=1
 Checkenv
-if [ -f shadowsocks.pid ] ; then
-	PID=`cat shadowsocks.pid`
-	ss_started=`ps -aux |grep "$PID" |grep -o ss-redir`
-	if [ "$ss_started" == "ss-redir" ] ; then
-		echo -e "\e[41;30m关闭中...\e[0m"
-		Stop
-	else
-		echo -e "\e[42;30m上次未正常退出，但仍然启动...\e[0m"
-		$sstool -f
-		Start
-	fi
+if [ -f /run/ss-iptables.lock ] ; then
+	echo -e "\e[41;30m关闭中...\e[0m"
+	Stop
 else
 	echo -e "\e[42;30m启动中...\e[0m"
 	Start

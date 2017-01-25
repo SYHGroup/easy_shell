@@ -2,11 +2,11 @@
 旨在分享linux下使用shadowsocks的经验。  
 ## ss-iptables.sh:  
 依赖`shadowsocks-libev`,`ipset`(optional)。  
-直接执行 ./ss-iptables.sh 即可自动判断运行状态 也可以增加参数 /update/start/stop/restart 手动运行。  
+配置完成files/中的所有文件后，直接执行 sudo ./ss-iptables.sh 即可自动判断运行状态 也可以增加参数 /update/start/stop/restart 手动运行。  
 ## files/ 中包含:  
-chinadns的init脚本  
+chinadns和shadowsocks-libev-nat的systemd脚本  
 桌面配置文件和图标  
-( 使用前置于合适的路径并修改 shadowsocks-iptables.desktop )。  
+( 使用前置于合适的路径并修改 )。  
   
   
 ## ss-rules-without-ipset  (目前还不能正常运作)
