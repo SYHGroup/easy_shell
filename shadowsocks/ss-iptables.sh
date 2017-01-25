@@ -36,9 +36,9 @@ if [ ! -f chnroute.txt ] ; then
 Update
 fi
 if [ $USE_CHINADNS == 1 ] ; then
-	echo -e -n "\e[1;32m使用chinadns...... \e[0m"
+	echo -e "\e[1;32m● \e[0m使用chinadns \c"
 else
-	echo -e -n "\e[1;34m不使用chinadns......\e[0m"
+	echo -e "\e[1;31m● \e[0m不使用chinadns \c"
 fi
 }
 function Start(){
@@ -56,28 +56,6 @@ $sstool -s $serverip -l $localport -i chnroute.txt -o
 if [ $USE_CHINADNS == 1 ] ; then
 service chinadns start
 fi
-if [ $FANCYDISPLAY == 1 ] ; then
-echo -e "\e[1;34m                                   
-                                 CO
-                              Ls40a
-                          e088S4S8C
-                       O48S88STT84 
-                   Ca4SS48SSTTTT4O 
-                L08S88SSSSs4UTTS8  
-            3s44S4STTS48ssSUTTT4Y  
-         es4888STTTS48sL4STTTTTS3  
-     3O0484STTTTTS44s1aSSTTTTT80   
- 3Y44S48STTTTTTS44s e44TTTTTTT8e   
- tO08SS48STTTS44Y  a8STTTTTTTS4    
-     7sa48SS44Y  O44TTTTTTTTT4Y    
-          3YO   Y4088STTTTTTT8?    
-                lL0448SS848S4s     
-                0ast  2O008842     
-                Saa0C       3      
-                Ta4e               
-                T0                 
-                O                  \e[0m"
-fi
 }
 function Stop(){
 $sstool -f
@@ -85,28 +63,6 @@ kill `cat shadowsocks.pid`
 rm shadowsocks.pid
 if [ $USE_CHINADNS == 1 ] ; then
 service chinadns stop
-fi
-if [ $FANCYDISPLAY == 1 ] ; then
-echo -e "                                   
-                                 CO
-                              Ls40a
-                          e088S4S8C
-                       O48S88STT84 
-                   Ca4SS48SSTTTT4O 
-                L08S88SSSSs4UTTS8  
-            3s44S4STTS48ssSUTTT4Y  
-         es4888STTTS48sL4STTTTTS3  
-     3O0484STTTTTS44s1aSSTTTTT80   
- 3Y44S48STTTTTTS44s e44TTTTTTT8e   
- tO08SS48STTTS44Y  a8STTTTTTTS4    
-     7sa48SS44Y  O44TTTTTTTTT4Y    
-          3YO   Y4088STTTTTTT8?    
-                lL0448SS848S4s     
-                0ast  2O008842     
-                Saa0C       3      
-                Ta4e               
-                T0                 
-                O                  "
 fi
 }
 #主进程开始
@@ -140,16 +96,38 @@ if [ -f shadowsocks.pid ] ; then
 	PID=`cat shadowsocks.pid`
 	ss_started=`ps -aux |grep "$PID" |grep -o ss-redir`
 	if [ "$ss_started" == "ss-redir" ] ; then
-		echo "关闭中..."
+		echo -e "\e[41;30m关闭中...\e[0m"
 		Stop
 	else
-		echo "上次未正常退出，但仍然启动..."
+		echo -e "\e[42;30m上次未正常退出，但仍然启动...\e[0m"
 		$sstool -f
 		Start
 	fi
 else
-	echo "启动中..."
+	echo -e "\e[42;30m启动中...\e[0m"
 	Start
+fi
+if [ $FANCYDISPLAY == 1 ] ; then
+echo -e "\e[1;34m                                   
+                                 CO
+                              Ls40a
+                          e088S4S8C
+                       O48S88STT84 
+                   Ca4SS48SSTTTT4O 
+                L08S88SSSSs4UTTS8  
+            3s44S4STTS48ssSUTTT4Y  
+         es4888STTTS48sL4STTTTTS3  
+     3O0484STTTTTS44s1aSSTTTTT80   
+ 3Y44S48STTTTTTS44s e44TTTTTTT8e   
+ tO08SS48STTTS44Y  a8STTTTTTTS4    
+     7sa48SS44Y  O44TTTTTTTTT4Y    
+          3YO   Y4088STTTTTTT8?    
+                lL0448SS848S4s     
+                0ast  2O008842     
+                Saa0C       3      
+                Ta4e               
+                T0                 
+                O                  \e[0m"
 fi
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
