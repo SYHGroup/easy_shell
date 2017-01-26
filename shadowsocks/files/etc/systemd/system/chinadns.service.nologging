@@ -1,0 +1,14 @@
+[Unit]
+Description=Chinadns
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/chinadns \
+	-m \
+	-b 127.0.0.2 \
+        -c /home/jerry/files/jerry/chnroute.txt
+
+[Install]
+WantedBy=multi-user.target
