@@ -131,7 +131,6 @@ mkdir ~/go
 echo 'export GOPATH=$HOME/go' >> ~/.bashrc
 echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
 source ~/.bashrc
-#go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
 }
 
 function Zsh(){
@@ -148,7 +147,7 @@ chsh -s zsh
 function Desktop(){
 Checkroot
 apt install -y tightvncserver xfce4 xfce4-goodies xorg fonts-noto
-wget https://gist.githubusercontent.com/simonsmh/36217aad5adf3514c87a087ee5017843/raw/vncserver@.service -O /etc/systemd/system/vncserver@.service
+wget https://github.com/SYHGroup/easysystemd/raw/master/vncserver%40.service -O /etc/systemd/system/vncserver@.service
 systemctl enable vncserver@1.service
 vncserver :1
 vncserver -kill :1
@@ -184,10 +183,13 @@ function SSPreset(){
 Checkroot
 apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang screen tmux sudo curl gawk debhelper dh-systemd init-system-helpers pkg-config apg libpcre3-dev zip unzip npm golang tree bzr git subversion python-pip python-m2crypto
 apt install -y --no-install-recommends asciidoc xmlto
-wget 'https://gist.githubusercontent.com/simonsmh/36217aad5adf3514c87a087ee5017843/raw/shadowsocks-server.service' -O /etc/systemd/system/shadowsocks-server.service  
+wget 'https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-server.service' -O /etc/systemd/system/shadowsocks-server.service 
+wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-go.service -O /etc/systemd/system/shadowsocks-go.service
 Compilelibsodium
 Python
+Setgolang
 Libev
+systemctl enable shadowsocks-go.service 
 systemctl enable shadowsocks-server.service
 systemctl enable shadowsocks-libev
 }
@@ -273,12 +275,12 @@ cd shadowsocks-libev
 git fetch
 git reset --hard
 git pull
-dpkg-buildpackage -b -i >/dev/null 2>>logcat
+dpkg-buildpackage -b -i
 cd ..
 dpkg -i shadowsocks-libev_*.deb
 rm -rf *shadowsocks*.deb *.changes *.buildinfo
 service shadowsocks-libev restart
-##Plugin
+##Obfs Plugin
 cd $rootpath
 git clone https://github.com/shadowsocks/simple-obfs
 cd simple-obfs
@@ -298,7 +300,13 @@ cd shadowsocksr
 git fetch
 git reset --hard
 git pull
-python setup.py install >/dev/null 2>>logcat
+python setup.py install
+systemctl restart shadowsocks-server.service
+}
+
+function Go(){
+go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
+cp ~/go/bin/shadowsocks-server /usr/bin/
 systemctl restart shadowsocks-server.service
 }
 
@@ -411,6 +419,7 @@ Usage:
 \t\t-l\t\tCompile Libsodium
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
+\t\t-sg\t\tCompile SS-Go
 \t\t-o\t\tOpenwrt Compile Task
 \tLarge Script:
 \t\tNX\t\tNginx
@@ -452,6 +461,7 @@ case $arg in
 -l)Libsodium;;
 -sl)Libev;;
 -sp)Python;;
+-sg)Go;;
 -o)Openwrt;;
 #Large Script
 -nx|NX)NX;;
@@ -463,11 +473,12 @@ Vlmcsd &
 Libsodium && Python &
 Libev &
 Openwrt &
+#Go &
 wait
 ;;
 update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
-wget --no-cache https://gist.githubusercontent.com/simonsmh/ecb333f938ecd94db8b3c80f44dbf36b/raw/shellbox.sh -O shellbox.sh
+wget --no-cache https://raw.githubusercontent.com/SYHGroup/easy_shell/master/shellbox/shellbox.sh -O shellbox.sh
 chmod +x shellbox.sh
 exit 0
 ;;

@@ -1,9 +1,0 @@
-[submodule "ddns/Dnspod-ddns-sh"]
-	path = ddns/Dnspod-ddns-sh
-	url = https://github.com/SYHGroup/Dnspod-ddns-sh.git
-[submodule "ddns/CloudXNS-DDNS"]
-	path = ddns/CloudXNS-DDNS
-	url = https://github.com/SYHGroup/CloudXNS-DDNS
-[submodule "oh-my-termux"]
-	path = oh-my-termux
-	url = https://github.com/SYHGroup/oh-my-termux
