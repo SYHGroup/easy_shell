@@ -290,6 +290,7 @@ git fetch
 git reset --hard
 git pull
 git submodule update --init --recursive
+./autogen.sh
 dpkg-buildpackage -b -i
 cd ..
 dpkg -i shadowsocks-libev_*.deb
@@ -303,6 +304,7 @@ git fetch
 git reset --hard
 git pull
 git submodule update --init --recursive
+./autogen.sh
 ./configure
 make
 make install
