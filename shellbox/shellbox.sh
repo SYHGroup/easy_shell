@@ -185,7 +185,8 @@ apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang sc
 apt install -y --no-install-recommends asciidoc xmlto
 wget 'https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-server.service' -O /etc/systemd/system/shadowsocks-server.service 
 wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-go.service -O /etc/systemd/system/shadowsocks-go.service
-Compilelibsodium
+Libsodium
+Mbedtls
 Python
 Setgolang
 Libev
@@ -265,6 +266,16 @@ git pull
 make
 make install
 }
+
+function Mbedtls(){
+Checkroot
+cd $rootpath
+git clone https://github.com/ARMmbed/mbedtls.git
+cd mbedtls
+make
+make install
+}
+
 
 function Libev(){
 Checkroot
