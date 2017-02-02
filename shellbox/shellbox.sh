@@ -289,6 +289,7 @@ cd shadowsocks-libev
 git fetch
 git reset --hard
 git pull
+git submodule update --init --recursive
 dpkg-buildpackage -b -i
 cd ..
 dpkg -i shadowsocks-libev_*.deb
@@ -301,6 +302,7 @@ cd simple-obfs
 git fetch
 git reset --hard
 git pull
+git submodule update --init --recursive
 ./configure
 make
 make install
