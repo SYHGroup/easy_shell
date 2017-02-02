@@ -272,6 +272,9 @@ Checkroot
 cd $rootpath
 git clone https://github.com/ARMmbed/mbedtls.git
 cd mbedtls
+git fetch
+git reset --hard
+git pull
 make
 make install
 }
