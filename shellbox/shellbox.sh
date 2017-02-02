@@ -282,7 +282,7 @@ make install
 
 function Libev(){
 Checkroot
-##Libev
+## Libev
 cd $rootpath
 git clone https://github.com/shadowsocks/shadowsocks-libev
 cd shadowsocks-libev
@@ -296,7 +296,7 @@ cd ..
 dpkg -i shadowsocks-libev_*.deb
 rm -rf *shadowsocks*.deb *.changes *.buildinfo
 service shadowsocks-libev restart
-##Obfs Plugin
+## Obfs Plugin
 cd $rootpath
 git clone https://github.com/shadowsocks/simple-obfs
 cd simple-obfs
@@ -308,6 +308,7 @@ git submodule update --init --recursive
 ./configure
 make
 make install
+setcap cap_net_bind_service+ep /usr/local/bin/obfs-server
 }
 
 function Python(){
