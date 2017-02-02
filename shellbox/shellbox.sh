@@ -428,6 +428,7 @@ Usage:
 \t\t-u\t\tSystem update
 \t\t-v\t\tCompile Vlmcsd
 \t\t-l\t\tCompile Libsodium
+\t\t-t\t\tCompile Mbedtls
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
@@ -470,6 +471,7 @@ case $arg in
 -u)Sysupdate;;
 -v)Vlmcsd;;
 -l)Libsodium;;
+-t)Mbedtls;;
 -sl)Libev;;
 -sp)Python;;
 -sg)Go;;
@@ -481,7 +483,10 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
-Libsodium && Python &
+Libsodium &
+Mbedtls &
+wait
+Python &
 Libev &
 Openwrt &
 #Go &
