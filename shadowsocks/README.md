@@ -7,8 +7,9 @@
 chinadns和shadowsocks-libev-nat的systemd脚本  
 桌面配置文件和图标  
 ( 使用前置于合适的路径并修改 )。  
-  
-  
+## files/etc/resolv.conf:  
+若你的系统使用resolvconf，请参照resolvconf的manual来修改resolv.conf。如果系统使用network-manager，可以使用network-manager的图形界面修改dns。  
+  
 ## ss-rules-without-ipset  (目前还不能正常运作)
 原项目： https://github.com/shadowsocks/luci-app-shadowsocks 地址： https://raw.githubusercontent.com/shadowsocks/luci-app-shadowsocks/master/files/root/usr/bin/ss-rules-without-ipset  
 改变：第一行 #!/bin/sh => #!/usr/bin/env bash  
