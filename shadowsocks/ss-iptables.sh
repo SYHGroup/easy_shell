@@ -4,11 +4,11 @@ localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="config-client"	#完整路径为/etc/shadowsocks-libev/config-client.json
 sstool="ss-nat"
-USE_CHINADNS=0
-FANCYDISPLAY=1	#用于在终端中画出一个小飞机图标
+USE_CHINADNS=false #使用true,false或/bin/true,/bin/false
+FANCYDISPLAY=true	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
-if [ $IS_TERMINAL == 1 ] ; then
+if [ "$IS_TERMINAL" == "true" ] ; then
 read -n 1 -t 5 -p "发生错误，等待5秒或任意键退出"
 fi
 exit 1
@@ -35,7 +35,7 @@ fi
 if [ ! -f chnroute.txt ] ; then
 Update
 fi
-if [ $USE_CHINADNS == 1 ] ; then
+if $USE_CHINADNS ; then
 	echo -e "\e[1;32m● \e[0m使用chinadns \c"
 else
 	echo -e "\e[1;31m● \e[0m不使用chinadns \c"
@@ -43,9 +43,9 @@ fi
 }
 function Start(){
 #Get ip from domain
-serverip=`ping ${ssdomain} -s 1 -c 1 -W 2 | grep ${ssdomain} | head -n 1`
-serverip=`echo ${serverip} | cut -d'(' -f 2 | cut -d')' -f 1`
-if [ "$serverip" == "" ] ; then
+serverip=$(ping ${ssdomain} -s 1 -c 1 -W 2 | grep ${ssdomain} | head -n 1)
+serverip=$(echo ${serverip} | cut -d '(' -f 2 | cut -d ')' -f 1)
+if [ -z "$serverip" ] ; then
 	echo "错误：查找服务器ip失败，检查网络连接"
 	ErrorSolve
 fi
@@ -54,14 +54,14 @@ touch /run/ss-iptables.lock
 systemctl start shadowsocks-libev-redir@"$ssconfig".service
 $sstool -s $serverip -l $localport -i chnroute.txt -o
 #Start chinadns if necessary
-if [ $USE_CHINADNS == 1 ] ; then
+if $USE_CHINADNS ; then
 systemctl start chinadns.service
 fi
 }
 function Stop(){
 $sstool -f
 systemctl stop shadowsocks-libev-redir@"$ssconfig".service
-if [ $USE_CHINADNS == 1 ] ; then
+if $USE_CHINADNS ; then
 systemctl stop chinadns.service
 fi
 rm /run/ss-iptables.lock
@@ -90,7 +90,7 @@ systemctl restart networking
 Start
 ;;
 "")
-IS_TERMINAL=1
+IS_TERMINAL="true"
 Checkenv
 if [ -f /run/ss-iptables.lock ] ; then
 	echo -e "\e[41;30m关闭中...\e[0m"
@@ -99,7 +99,7 @@ else
 	echo -e "\e[42;30m启动中...\e[0m"
 	Start
 fi
-if [ $FANCYDISPLAY == 1 ] ; then
+if $FANCYDISPLAY ; then
 echo -e "\e[1;34m                                   
                                  CO
                               Ls40a

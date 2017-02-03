@@ -17,10 +17,7 @@ After=network.target
 [Service]
 Type=simple
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-ExecStart=/bin/sh -c '/usr/bin/ss-redir \
-	-c /etc/shadowsocks-libev/%i.json \
-	> /var/log/ss-redir.log \
-	2>&1'
+ExecStart=/usr/bin/ss-redir -c /etc/shadowsocks-libev/%i.json
 
 [Install]
 WantedBy=multi-user.target
