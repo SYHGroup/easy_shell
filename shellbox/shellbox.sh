@@ -212,7 +212,7 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx mysql php7.0-fpm x0vncserver@1 transmission-daemon shadowsocks-server shadowsocks-libev
+for motd in nginx mysql php7.0-fpm x0vncserver@5901 transmission-daemon shadowsocks-server shadowsocks-libev
 do
 if systemctl status $motd|grep -q "(running)"
 then
