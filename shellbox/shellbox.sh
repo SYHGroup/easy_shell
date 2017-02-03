@@ -146,6 +146,14 @@ chsh -s zsh
 
 function Desktop(){
 Checkroot
+### For Ordinary Vnc Server ###
+#apt install -y tightvncserver xfce4 xfce4-goodies xorg fonts-noto
+#wget https://github.com/SYHGroup/easysystemd/raw/master/vncserver%40.service -O /etc/systemd/system/vncserver@.service
+#systemctl enable vncserver@1.service
+#vncserver :1
+#vncserver -kill :1
+#systemctl start vncserver@1.service
+### For x0vncserver ###
 apt install -y tigervnc-scraping-server tigervnc-standalone-server tigervnc-xorg-extension xfce4 xfce4-goodies xorg fonts-noto
 wget https://github.com/SYHGroup/easysystemd/raw/master/x0vncserver%40.service -O /etc/systemd/system/x0vncserver@.service
 systemctl enable x0vncserver@5901.service
