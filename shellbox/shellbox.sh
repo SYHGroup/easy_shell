@@ -268,7 +268,7 @@ cd libsodium
 git fetch
 git reset --hard
 git pull
-./configure
+./configure --prefix=/usr
 make
 make install
 }
@@ -281,7 +281,7 @@ cd mbedtls
 git fetch
 git reset --hard
 git pull
-make
+make SHARED=1 CFLAGS=-fPIC
 make install
 }
 
