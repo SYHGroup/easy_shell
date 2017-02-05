@@ -209,8 +209,8 @@ systemctl enable shadowsocks-libev
 
 function Updatemotd(){
 Checkroot
-AVAILABLE_MEM=$(free -h | grep Mem | awk {'print $7'})
-DISK_FREE=$(df / -h | grep '/' | awk {'print $4'})
+AVAILABLE_MEM=$(free -h | grep Mem | awk '{print $7}')
+DISK_FREE=$(df / -h | grep '/' | awk '{print $4}')
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m\e[37;44;1m可用存储: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m" > /etc/motd
 apt update 2>&1 | sed -n '$p' >> /etc/motd
 if certbot renew|grep -q "No renewals were attempted."
