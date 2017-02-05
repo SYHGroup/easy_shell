@@ -73,7 +73,8 @@ echo -e 'deb http://ftp.debian.org/debian/ stable main contrib non-free
 deb http://security.debian.org/ stable/updates main contrib non-free
 deb http://ftp.debian.org/debian/ stable-updates main contrib non-free
 deb http://ftp.debian.org/debian/ stable-proposed-updates main contrib non-free
-deb http://ftp.debian.org/debian/ stable-backports main contrib non-free\n' > /etc/apt/sources.list
+deb http://ftp.debian.org/debian/ stable-backports main contrib non-free
+deb http://repo.debiancn.org/ stretch main\n' > /etc/apt/sources.list
 }
 
 function Apttestingsources(){
@@ -82,7 +83,8 @@ echo -e 'deb http://ftp.debian.org/debian/ testing main contrib non-free
 deb http://security.debian.org/ testing/updates main contrib non-free
 deb http://ftp.debian.org/debian/ testing-updates main contrib non-free
 deb http://ftp.debian.org/debian/ testing-proposed-updates main contrib non-free
-deb http://ftp.debian.org/debian experimental main\n' > /etc/apt/sources.list
+deb http://ftp.debian.org/debian experimental main
+deb http://repo.debiancn.org/ stretch main\n' > /etc/apt/sources.list
 }
 
 function Setsysctl(){
