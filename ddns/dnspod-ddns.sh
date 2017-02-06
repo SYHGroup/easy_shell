@@ -11,12 +11,12 @@ then
 echo "Cannot find cURL."
 exit 1
 fi
-if [ ! -x "$(command -v nc)" ]
-then
+#if [ ! -x "$(command -v nc)" ]
+#then
 RecodIP=$(curl members.3322.org/dyndns/getip)
-else
-RecodIP=$(nc ns1.dnspod.net 6666)
-fi
+#else
+#RecodIP=$(nc ns1.dnspod.net 6666)  # This command is out of date.
+#fi
 List=$(curl -skX POST https://dnsapi.cn/Record.List -d "login_token=${TokenID},${Token}&format=json&domain=${Domain}&sub_domain=${SubDomain}")
 RecodID=$(sed -n 's/.*"id":"\([0-9]*\)".*"name":"'${SubDomain}'".*/\1/p' <<< $List)
 OldIP=$(sed -n 's/.*"value":"\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)".*"name":"${SubDomain}".*/\1/p' <<< $List)
