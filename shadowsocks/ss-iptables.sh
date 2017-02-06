@@ -4,7 +4,7 @@ localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="config-client"	#完整路径为/etc/shadowsocks-libev/config-client.json
 sstool="ss-nat"
-USE_CHINADNS=false #使用true,false或/bin/true,/bin/false
+USE_CHINADNS=false	#使用true,false或/bin/true,/bin/false
 FANCYDISPLAY=true	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
