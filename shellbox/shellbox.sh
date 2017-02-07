@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #encoding=utf8
 rootpath="/root"
-openwrtpath=$rootpath"/files/openwrt/OpenWrt-SDK-15.05.1-ar71xx-*"
 
 ########
 #Small Script
@@ -191,14 +190,14 @@ function SSPreset(){
 Checkroot
 apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang screen tmux sudo curl gawk debhelper dh-systemd init-system-helpers pkg-config apg libpcre3-dev zip unzip npm golang tree bzr git subversion python-pip python-m2crypto
 apt install -y --no-install-recommends asciidoc xmlto
-wget 'https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-server.service' -O /etc/systemd/system/shadowsocks-server.service 
-wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-go.service -O /etc/systemd/system/shadowsocks-go.service
+wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-server.service -O /etc/systemd/system/shadowsocks-server.service 
+#wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-go.service -O /etc/systemd/system/shadowsocks-go.service
 Libsodium
 Mbedtls
 Python
 Setgolang
 Libev
-systemctl enable shadowsocks-go.service 
+#systemctl enable shadowsocks-go.service 
 systemctl enable shadowsocks-server.service
 systemctl enable shadowsocks-libev
 }
@@ -212,11 +211,11 @@ Checkroot
 AVAILABLE_MEM=$(free -h | sed -n '2p' | awk '{print $7}')
 DISK_FREE=$(df / -h | sed -n '2p' | awk '{print $4}')
 if grep -q 'G' <<< $DISK_FREE ; then
-	echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m\c" >/etc/motd
+	echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE}\e[0m\c " >/etc/motd
 else
-	echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m\c" >/etc/motd
+	echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE}\e[0m\c " >/etc/motd
 fi
-echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
+echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM}\e[0m" >>/etc/motd
 apt update 2>&1 | sed -n '$p' >> /etc/motd
 if certbot renew|grep -q "No renewals were attempted."
 then
@@ -340,13 +339,15 @@ systemctl restart shadowsocks-server.service
 }
 
 function Go(){
-go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
-cp ~/go/bin/shadowsocks-server /usr/bin/
+#go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
+go get github.com/shadowsocks/go-shadowsocks2
+mv ~/go/bin/shadowsocks-server /usr/bin/
 systemctl restart shadowsocks-server.service
 }
 
 function Openwrt(){
-cd $openwrtpath
+#Migrated to Travis Ci
+cd $rootpath"/files/openwrt/OpenWrt-SDK-15.05.1-ar71xx-*"
 git clone https://github.com/aa65535/openwrt-feeds.git package/feeds
 git clone https://github.com/shadowsocks/luci-app-shadowsocks.git package/luci-app-shadowsocks
 git clone https://github.com/shadowsocks/openwrt-shadowsocks.git package/shadowsocks-libev
@@ -364,7 +365,7 @@ git reset --hard
 git pull
 cd ../..
 done
-make -j2 -k
+make -j2
 }
 
 ########
@@ -512,7 +513,7 @@ Mbedtls &
 wait
 Python &
 Libev &
-Openwrt &
+#Openwrt &
 #Go &
 wait
 ;;
