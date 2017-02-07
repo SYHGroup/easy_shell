@@ -212,9 +212,9 @@ AVAILABLE_MEM=$(free -h | sed -n '2p' | awk '{print $7}')
 DISK_FREE=$(df / -h | sed -n '2p' | awk '{print $4}')
 apt update 2>&1 | sed -n '$p' > /etc/motd
 if grep -q 'G' <<< $DISK_FREE ; then
-echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[\c\n" >> /etc/motd
+echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m\n" >> /etc/motd
 else
-echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0c\n" >> /etc/motd
+echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m\n" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m\n" >>/etc/motd
 if certbot renew|grep -q "No renewals were attempted."
