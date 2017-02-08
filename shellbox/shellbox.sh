@@ -234,6 +234,8 @@ do
 if systemctl status $motd|grep -q "(running)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
+elif systemctl --user status $motd|grep -q "(running)"
+echo -e "ok"
 else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 fi &
