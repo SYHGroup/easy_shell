@@ -234,13 +234,20 @@ do
 if systemctl status $motd|grep -q "(running)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
-elif systemctl --user status $motd|grep -q "(running)"
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd|sed -n '$p'` >> /etc/motd"
 else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 fi &
 done
 wait
+for motd in $(ls /root/.config/systemd/user/default.target.wants/)
+do
+if systemctl--user status $motd|grep -q "(running)"
+then
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
+else
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
+fi &
+done
 echo -e "\e[37;40;4m上次执行: \e[0m"`date` >> /etc/motd
 cat /etc/motd
 }
