@@ -229,13 +229,13 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx mysql php7.0-fpm x0vncserver@5901 transmission-daemon shadowsocks-server shadowsocks-libev
+for motd in nginx mysql php7.0-fpm x0vncserver@5901 transmission-daemon shadowss shadowsocks-libev
 do
 if systemctl status $motd|grep -q "(running)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 elif systemctl --user status $motd|grep -q "(running)"
-echo -e "ok"
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd|sed -n '$p'` >> /etc/motd"
 else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 fi &
