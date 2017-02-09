@@ -229,7 +229,7 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx mysql php7.0-fpm x0vncserver@5901 transmission-daemon shadowss shadowsocks-libev
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service
 do
 if systemctl status $motd|grep -q "(running)"
 then
@@ -238,16 +238,16 @@ else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 fi &
 done
-wait
 for motd in $(ls /root/.config/systemd/user/default.target.wants/)
 do
-if systemctl--user status $motd|grep -q "(running)"
+if systemctl --user status $motd|grep -q "(running)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 fi &
 done
+wait
 echo -e "\e[37;40;4m上次执行: \e[0m"`date` >> /etc/motd
 cat /etc/motd
 }
@@ -300,7 +300,7 @@ git fetch
 git reset --hard
 git pull
 make SHARED=1 CFLAGS=-fPIC
-make install
+make DESTDIR=/usr install
 }
 
 
