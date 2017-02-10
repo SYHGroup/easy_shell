@@ -190,15 +190,17 @@ function SSPreset(){
 Checkroot
 apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang screen tmux sudo curl gawk debhelper dh-systemd init-system-helpers pkg-config apg libpcre3-dev zip unzip npm golang tree bzr git subversion python-pip python-m2crypto
 apt install -y --no-install-recommends asciidoc xmlto
-wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-server.service -O /etc/systemd/system/shadowsocks-server.service 
-#wget https://github.com/SYHGroup/easysystemd/raw/master/shadowsocks-go.service -O /etc/systemd/system/shadowsocks-go.service
+wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/user/ssserver.service 
+#wget https://github.com/SYHGroup/easy_systemd/raw/master/shadowsocks-go.service -O /etc/systemd/user/shadowsocks-server.service
+#wget https://github.com/SYHGroup/easy_systemd/raw/master/go-shadowsocks2.service -O /etc/systemd/user/go-shadowsocks2.service
 Libsodium
 Mbedtls
 Python
 Setgolang
 Libev
-#systemctl enable shadowsocks-go.service 
-systemctl enable shadowsocks-server.service
+#systemctl --user enable shadowsocks-server.service
+#systemctl --user enable go-shadowsocks2.service
+systemctl --user enable ssserver.service
 systemctl enable shadowsocks-libev
 }
 
@@ -229,7 +231,7 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901
 do
 if systemctl status $motd|grep -q "(running)"
 then
