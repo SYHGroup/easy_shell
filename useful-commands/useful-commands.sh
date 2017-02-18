@@ -60,6 +60,7 @@ function FlushIptables(){
 function Iptables(){
 iptables -I INPUT -p tcp --dport 5901 -s 10.0.0.85 -j REJECT --reject-with icmp-port-unreachable -m comment --comment "VNC"
 iptables -I INPUT -s 10.0.0.85 -j DROP -m comment --comment "Block Ip"
+#192.168.1.0/24
 iptables -nvL --line-numbers
 iptables -D INPUT n* # n for line number
 }
