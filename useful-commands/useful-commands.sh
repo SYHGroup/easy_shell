@@ -14,6 +14,10 @@ function GitSetup(){
   git push
 }
 function SystemControl(){
+  tar -zcvf /tmp/etc.tar.gz /etc # -z for gzip(gz)
+  tar -zxvf /tmp/etc.tar.gz
+  fc-cache -fv
+  systemctl daemon-reload
   chattr +i /etc/resolv.conf
   chattr -i /etc/resolv.conf
   #apt install gnome-disk-utility
@@ -37,5 +41,26 @@ function SystemControl(){
   unset http_proxy
   export ftp_proxy="127.0.0.1:1081"
   unset ftp_proxy
+}
+function FlushIptables(){
+  iptables -F
+  iptables -X
+  iptables -t nat -F
+  iptables -t nat -X
+  iptables -t mangle -F
+  iptables -t mangle -X
+  iptables -t raw -F
+  iptables -t raw -X
+  iptables -t security -F
+  iptables -t security -X
+  iptables -P INPUT ACCEPT
+  iptables -P FORWARD ACCEPT
+  iptables -P OUTPUT ACCEPT
+}
+function Iptables(){
+iptables -I INPUT -p tcp --dport 5901 -s 10.0.0.85 -j REJECT --reject-with icmp-port-unreachable -m comment --comment "VNC"
+iptables -I INPUT -s 10.0.0.85 -j DROP -m comment --comment "Block Ip"
+iptables -nvL --line-numbers
+iptables -D INPUT n* # n for line number
 }
 exit 0
