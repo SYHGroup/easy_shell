@@ -13,6 +13,15 @@ function GitSetup(){
   git commit
   git push
 }
+function GitInit(){
+  #git init
+  echo "# first" >> README.md
+  git init
+  git add README.md
+  git commit -m "first commit"
+  git remote add origin https://github.com/Jerry981028/first.git
+  git push -u origin master
+}
 function SystemControl(){
   tar -zcvf /tmp/etc.tar.gz /etc # -z for gzip(gz)
   tar -zxvf /tmp/etc.tar.gz
