@@ -62,6 +62,9 @@ echo '/swap none swap sw 0 0' >> /etc/fstab
 swapon -a
 }
 
+function Saveapt(){
+rm /var/lib/apt/lists/lock                                     rm /var/cache/apt/archives/lock                                rm /var/lib/dpkg/lock                                          }
+
 ########
 #Server Preset
 ########
@@ -191,15 +194,11 @@ Checkroot
 apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang screen tmux sudo curl gawk debhelper dh-systemd init-system-helpers pkg-config apg libpcre3-dev zip unzip npm golang tree bzr git subversion python-pip python-m2crypto
 apt install -y --no-install-recommends asciidoc xmlto
 wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/user/ssserver.service 
-#wget https://github.com/SYHGroup/easy_systemd/raw/master/shadowsocks-go.service -O /etc/systemd/user/shadowsocks-server.service
-#wget https://github.com/SYHGroup/easy_systemd/raw/master/go-shadowsocks2.service -O /etc/systemd/user/go-shadowsocks2.service
 Libsodium
 Mbedtls
 Python
 Setgolang
 Libev
-#systemctl --user enable shadowsocks-server.service
-#systemctl --user enable go-shadowsocks2.service
 systemctl --user enable ssserver.service
 systemctl enable shadowsocks-libev
 }
@@ -259,11 +258,11 @@ Checkroot
 apt update
 systemctl stop nginx
 systemctl stop php7.0-fpm
-apt full-upgrade -y
+apt -y full-upgrade
 systemctl start php7.0-fpm
 systemctl start nginx
-#apt autoremove -y
-#dpkg -l |grep ^rc|awk '{print $2}' |sudo xargs dpkg -P
+#apt -y autoremove
+apt -y purge `dpkg -l | grep ^rc | awk '{print $2}'`
 }
 
 function Vlmcsd(){
@@ -448,6 +447,7 @@ Usage:
 \t\t-sshroot\tEnable ssh for root
 \t\t-ipv6\t\tSwitch ipv6
 \t\t-swap\t\tSwap file generation
+\t\t-saveapt\tSave apt/dpkg lock
 \tServer Preset:
 \t\t-stable\t\tApt stable sources
 \t\t-testing\tApt testing sources
@@ -491,6 +491,7 @@ case $arg in
 -sshroot)Sshroot;;
 -ipv6)Switchipv6;;
 -swap)Swap;;
+-saveapt)Saveapt;;
 #Server Preset
 -stable)Aptstablesources;;
 -testing)Apttestingsources;;
