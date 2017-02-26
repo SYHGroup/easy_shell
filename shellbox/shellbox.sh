@@ -63,7 +63,10 @@ swapon -a
 }
 
 function Saveapt(){
-rm /var/lib/apt/lists/lock                                     rm /var/cache/apt/archives/lock                                rm /var/lib/dpkg/lock                                          }
+rm /var/lib/apt/lists/lock
+rm /var/cache/apt/archives/lock
+rm /var/lib/dpkg/lock
+}
 
 ########
 #Server Preset
