@@ -190,6 +190,10 @@ function Github(){
 git config --global user.name "simonsmh"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
+echo "export GPG_TTY=$(tty)" >>~/.bashrc
+#Import gpg key from keybase first
 }
 
 function SSPreset(){
