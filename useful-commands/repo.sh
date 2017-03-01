@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 repo=(
 SYHGroup/easy_shell
 SYHGroup/easy_systemd
