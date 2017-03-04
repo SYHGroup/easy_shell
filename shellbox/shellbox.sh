@@ -281,8 +281,8 @@ cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
 make
-chmod +x vlmcs
-chmod +x vlmcsd
+chmod +x ./bin/vlmcs
+chmod +x ./bin/vlmcsd
 mv ./bin/vlmcs /usr/bin/
 mv ./bin/vlmcsd /usr/bin/
 git clean -fdx
