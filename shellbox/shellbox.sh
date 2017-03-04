@@ -198,7 +198,7 @@ echo "export GPG_TTY=$(tty)" >>~/.bashrc
 
 function SSPreset(){
 Checkroot
-apt install -y build-essential autoconf libtool libssl-dev libpcre3-dev clang screen tmux sudo curl gawk debhelper dh-systemd init-system-helpers pkg-config apg libpcre3-dev zip unzip npm golang tree bzr git subversion python-pip python-m2crypto
+apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libmbedtls-dev libsodium-dev python-pip python-m2crypto golang
 apt install -y --no-install-recommends asciidoc xmlto
 wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/user/ssserver.service 
 Libsodium
@@ -352,7 +352,7 @@ git fetch
 git reset --hard
 git pull
 python setup.py install
-systemctl restart shadowsocks-server.service
+systemctl --user restart ssserver.service
 }
 
 function Go(){
@@ -527,13 +527,8 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
-Libsodium &
-Mbedtls &
-wait
 Python &
 Libev &
-#Openwrt &
-#Go &
 wait
 ;;
 update|upgrade)
