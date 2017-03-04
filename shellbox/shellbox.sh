@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #encoding=utf8
 rootpath="/tmp/build-source"
+mkdir $rootpath
 
 ########
 #Small Script
@@ -282,8 +283,8 @@ git reset --hard origin/HEAD
 make
 chmod +x vlmcs
 chmod +x vlmcsd
-mv vlmcs /usr/bin/
-mv vlmcsd /usr/bin/
+mv ./bin/vlmcs /usr/bin/
+mv ./bin/vlmcsd /usr/bin/
 git clean -fdx
 }
 
