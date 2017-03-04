@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #encoding=utf8
-rootpath="/root"
+rootpath="/tmp/build-source"
 
 ########
 #Small Script
@@ -198,7 +198,7 @@ echo "export GPG_TTY=$(tty)" >>~/.bashrc
 
 function SSPreset(){
 Checkroot
-apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libmbedtls-dev libsodium-dev python-pip python-m2crypto golang
+apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang
 apt install -y --no-install-recommends asciidoc xmlto
 wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/user/ssserver.service 
 Libsodium
@@ -278,12 +278,13 @@ cd $rootpath
 git clone https://github.com/Wind4/vlmcsd
 cd vlmcsd
 git fetch
-git reset --hard
-git pull
-make clean
+git reset --hard origin/HEAD
 make
 chmod +x vlmcs
 chmod +x vlmcsd
+mv vlmcs /usr/bin/
+mv vlmcsd /usr/bin/
+git clean -fdx
 }
 
 function Libsodium(){
@@ -292,11 +293,11 @@ cd $rootpath
 git clone https://github.com/jedisct1/libsodium -b stable
 cd libsodium
 git fetch
-git reset --hard
-git pull
-./configure --prefix=/usr
-make
+git reset --hard origin/HEAD
+./configure $1 #--prefix=/usr
+make -j
 make install
+git clean -fdx
 }
 
 function Mbedtls(){
@@ -305,10 +306,10 @@ cd $rootpath
 git clone https://github.com/ARMmbed/mbedtls.git
 cd mbedtls
 git fetch
-git reset --hard
-git pull
-make SHARED=1 CFLAGS=-fPIC
+git reset --hard origin/HEAD
+make SHARED=1 CFLAGS=-fPIC -j
 make DESTDIR=/usr install
+git clean -fdx
 }
 
 
@@ -319,28 +320,28 @@ cd $rootpath
 git clone https://github.com/shadowsocks/shadowsocks-libev
 cd shadowsocks-libev
 git fetch
-git reset --hard
-git pull
+git reset --hard origin/HEAD
 git submodule update --init --recursive
 ./autogen.sh
-dpkg-buildpackage -b -i
-cd ..
-dpkg -i shadowsocks-libev_*.deb
-rm -rf *shadowsocks*.deb *.changes *.buildinfo
-service shadowsocks-libev restart
+dpkg-buildpackage -b -uc -us
+git clean -fdx
 ## Obfs Plugin
 cd $rootpath
 git clone https://github.com/shadowsocks/simple-obfs
 cd simple-obfs
 git fetch
-git reset --hard
-git pull
+git reset --hard origin/HEAD
 git submodule update --init --recursive
 ./autogen.sh
-./configure
-make
-make install
-setcap cap_net_bind_service+ep /usr/local/bin/obfs-server
+dpkg-buildpackage -b -uc -us
+git clean -fdx
+## Install
+cd $rootpath
+dpkg -i simple-obfs_*.deb
+dpkg -i shadowsocks-libev_*.deb
+setcap cap_net_bind_service+ep /usr/bin/obfs-server
+systemctl restart shadowsocks-libev
+rm -rf *[shadowsocks-libev,simple-obfs]*[buildinfo,changes,deb]
 }
 
 function Python(){
@@ -349,40 +350,28 @@ cd $rootpath
 git clone https://github.com/shadowsocksr/shadowsocksr.git
 cd shadowsocksr
 git fetch
-git reset --hard
-git pull
+git reset --hard origin/HEAD
 python setup.py install
 systemctl --user restart ssserver.service
 }
 
 function Go(){
-#go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
 go get github.com/shadowsocks/go-shadowsocks2
 mv ~/go/bin/shadowsocks-server /usr/bin/
-systemctl restart shadowsocks-server.service
+systemctl --user restart go-shadowsocks2.service
 }
 
 function Openwrt(){
 #Migrated to Travis Ci
-cd $rootpath"/files/openwrt/OpenWrt-SDK-15.05.1-ar71xx-*"
-git clone https://github.com/aa65535/openwrt-feeds.git package/feeds
-git clone https://github.com/shadowsocks/luci-app-shadowsocks.git package/luci-app-shadowsocks
-git clone https://github.com/shadowsocks/openwrt-shadowsocks.git package/shadowsocks-libev
-git clone https://github.com/aa65535/openwrt-simple-obfs.git package/simple-obfs
-git clone https://github.com/aa65535/openwrt-chinadns.git package/chinadns
-git clone https://github.com/aa65535/openwrt-dns-forwarder.git package/dns-forwarder
-git clone https://github.com/aa65535/openwrt-dist-luci.git package/openwrt-dist-luci
-git clone https://github.com/licess/openwrt-pdnsd package/pdnsd
-git clone https://github.com/AlexZhuo/luci-app-pdnsd package/luci-app-pdnsd
+cd /root/files/openwrt/OpenWrt-SDK-*
 for dir in $(ls -l package/ |awk '/^d/ {print $NF}')
 do
 cd package/$dir
 git fetch
-git reset --hard
-git pull
+git reset --hard origin/HEAD
 cd ../..
 done
-make -j2
+make -k
 }
 
 ########
