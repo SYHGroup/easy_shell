@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #encoding=utf8
 rootpath="/tmp/build-source"
-mkdir $rootpath
+mkdir -p -m 777 $rootpath
 
 ########
 #Small Script
@@ -12,26 +12,6 @@ if [[ $EUID != "0" ]]
 then
 echo "Not root user."
 exit 1
-fi
-}
-
-function Dnspod(){
-TokenID=$1
-Token=$2
-SubDomain=$3
-Domain="simonsmh.cc"
-RecordTTL=3600
-RecodIP=$(nc ns1.dnspod.net 6666)
-List=$(curl -skX POST https://dnsapi.cn/Record.List -d "login_token=${TokenID},${Token}&format=json&domain=${Domain}")
-RecodID=$(echo $List | sed -n 's/.*"id":"\([0-9]*\)".*"name":"'${SubDomain}'".*/\1/p')
-OldIP=$(echo $List | sed -n 's/.*"value":"\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)".*"name":"${SubDomain}".*/\1/p')
-OldTTL=$(echo $List | sed -n 's/.*"ttl":"\([0-9]*\)".*"name":"'${SubDomain}'".*/\1/p')
-if [ $OldIP == $RecodIP ]&&[ $OldTTL == $RecordTTL ]
-then
-Result="Action skipped successful"
-else
-Result=$(curl -skX POST https://dnsapi.cn/Record.Modify -d "login_token=${TokenID},${Token}&format=json&record_id=${RecodID}&domain=${Domain}&sub_domain=${SubDomain}&value=${RecodIP}&ttl=${RecordTTL}&record_type=A&record_line_id=0" | sed -n 's/.*"message":"\(.*\)","created_at".*/\1/p')
-echo "Dnspod-ddns.sh: $(date) ${Result}"
 fi
 }
 
@@ -52,15 +32,6 @@ else
 sed -i s/'precedence ::ffff:0:0\/96  100'/'#precedence ::ffff:0:0\/96  100'/ /etc/gai.conf
 echo "Set to prefer ipv6."
 fi
-}
-
-function Swap(){
-Checkroot
-dd if=/dev/zero of=/swap bs=256M count=2
-mkswap /swap
-chmod 600 /swap
-echo '/swap none swap sw 0 0' >> /etc/fstab
-swapon -a
 }
 
 function Saveapt(){
@@ -288,32 +259,6 @@ mv ./bin/vlmcsd /usr/bin/
 git clean -fdx
 }
 
-function Libsodium(){
-Checkroot
-cd $rootpath
-git clone https://github.com/jedisct1/libsodium -b stable
-cd libsodium
-git fetch
-git reset --hard origin/HEAD
-./configure $1 #--prefix=/usr
-make -j
-make install
-git clean -fdx
-}
-
-function Mbedtls(){
-Checkroot
-cd $rootpath
-git clone https://github.com/ARMmbed/mbedtls.git
-cd mbedtls
-git fetch
-git reset --hard origin/HEAD
-make SHARED=1 CFLAGS=-fPIC -j
-make DESTDIR=/usr install
-git clean -fdx
-}
-
-
 function Libev(){
 Checkroot
 ## Libev
@@ -358,7 +303,7 @@ systemctl --user restart ssserver.service
 
 function Go(){
 go get github.com/shadowsocks/go-shadowsocks2
-mv ~/go/bin/shadowsocks-server /usr/bin/
+mv ~/go/bin/go-shadowsocks2 /usr/bin/
 systemctl --user restart go-shadowsocks2.service
 }
 
@@ -440,10 +385,8 @@ echo -e `date`"
 Usage:
 \tSmall Script:
 \t\t-checkroot\tCheck root
-\t\t-ddns\t\tDnspod ddns script
 \t\t-sshroot\tEnable ssh for root
 \t\t-ipv6\t\tSwitch ipv6
-\t\t-swap\t\tSwap file generation
 \t\t-saveapt\tSave apt/dpkg lock
 \tServer Preset:
 \t\t-stable\t\tApt stable sources
@@ -460,8 +403,6 @@ Usage:
 \t\t-m\t\tUpdate motd
 \t\t-u\t\tSystem update
 \t\t-v\t\tCompile Vlmcsd
-\t\t-l\t\tCompile Libsodium
-\t\t-t\t\tCompile Mbedtls
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
@@ -484,10 +425,8 @@ do
 case $arg in
 #Small Script
 -checkroot)Checkroot;;
--ddns)Dnspod;;
 -sshroot)Sshroot;;
 -ipv6)Switchipv6;;
--swap)Swap;;
 -saveapt)Saveapt;;
 #Server Preset
 -stable)Aptstablesources;;
@@ -504,8 +443,6 @@ case $arg in
 -m)Updatemotd;;
 -u)Sysupdate;;
 -v)Vlmcsd;;
--l)Libsodium;;
--t)Mbedtls;;
 -sl)Libev;;
 -sp)Python;;
 -sg)Go;;
@@ -528,13 +465,12 @@ chmod +x shellbox.sh
 exit 0
 ;;
 RUN)
-`echo $*|sed -e 's/^RUN //g'|awk -F ' ' '{ print $0 }'`
-exit 0
+`echo -n $*|sed -e 's/^RUN //g'|awk -F ' ' '{ print $0 }'`
+exit $?
 ;;
 *)
 Help
 ;;
 esac
 done
-[[ ! -n "$@" ]] && Help
-exit 0
+[[ ! -n "$@" ]] && Help && exit 1
