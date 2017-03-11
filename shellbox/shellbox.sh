@@ -159,7 +159,7 @@ sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.0/fpm/
 }
 
 function Github(){
-git config --global user.name "simonsmh"
+git config --global user.name "Simon Shi"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
 git config --global commit.gpgsign true
@@ -252,10 +252,7 @@ cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
 make
-chmod +x ./bin/vlmcs
-chmod +x ./bin/vlmcsd
-mv ./bin/vlmcs /usr/bin/
-mv ./bin/vlmcsd /usr/bin/
+install ./bin/* /usr/bin/
 git clean -fdx
 }
 
@@ -283,27 +280,10 @@ dpkg-buildpackage -b -uc -us
 git clean -fdx
 ## Install
 cd $rootpath
-dpkg -i simple-obfs_*.deb
-dpkg -i shadowsocks-libev_*.deb
-setcap cap_net_bind_service+ep /usr/bin/obfs-server
+dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
-#rm -rf *[shadowsocks-libev,simple-obfs]*[buildinfo,changes,deb]
-### Preserve built debian packages ###
-wwwdir="/var/wwwfiles/files/ss-debian-amd64binary"
-if [ ! -d "$wwwdir" ] ; then
-mkdir -p -m 755 "$wwwdir"
-chown www-data:www-data "$wwwdir"
-[ $? == 0 ] || exit 1
-fi
-List=$(ls |grep -E "\<*(shadowsocks-libev|simple-obfs)*(buildinfo|changes|deb)\>")
-[ $? == 0 ] && [ -n "$List" ] || exit 1
-echo "Moving built debian packages."
-sudo -u www-data rm -rf "${wwwdir}/*"
-for File in $List
-do
-mv "$File" "${wwwdir}/"
-chown www-data:www-data "${wwwdir}/${File}"
-done
+install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
+rm -rf *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
 function Python(){
@@ -321,19 +301,6 @@ function Go(){
 go get github.com/shadowsocks/go-shadowsocks2
 mv ~/go/bin/go-shadowsocks2 /usr/bin/
 systemctl --user restart go-shadowsocks2.service
-}
-
-function Openwrt(){
-#Migrated to Travis Ci
-cd /root/files/openwrt/OpenWrt-SDK-*
-for dir in $(ls -l package/ |awk '/^d/ {print $NF}')
-do
-cd package/$dir
-git fetch
-git reset --hard origin/HEAD
-cd ../..
-done
-make -k
 }
 
 ########
@@ -422,14 +389,13 @@ Usage:
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
-\t\t-o\t\tOpenwrt Compile Task
 \tLarge Script:
 \t\tNX\t\tNginx
 \t\tTMSU\t\tTransmission+Nginx
 \tShellbox:
 \t\t-server\t\tRun Production Server Automatic Update
 \t\tupdate\t\tUpdate shellbox.sh
-\t\tRUN\t\tRun with function param"
+\t\tRUN\t\tRun with function parameter"
 }
 
 ########
@@ -462,7 +428,6 @@ case $arg in
 -sl)Libev;;
 -sp)Python;;
 -sg)Go;;
--o)Openwrt;;
 #Large Script
 -nx|NX)NX;;
 -tmsu|TMSU)TMSU;;
@@ -474,7 +439,7 @@ Python &
 Libev &
 wait
 ;;
-update|upgrade)
+u|update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
 wget --no-cache https://raw.githubusercontent.com/SYHGroup/easy_shell/master/shellbox/shellbox.sh -O shellbox.sh
 chmod +x shellbox.sh
