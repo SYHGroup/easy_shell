@@ -197,11 +197,11 @@ else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-if certbot renew| grep -q "No renewals were attempted."
+if certbot renew| grep -Fq "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 最新 \e[0m" >> /etc/motd
 else
-certbot renew --pre-hook "systemd stop nginx.service" --post-hook "systemd start nginx.service"
+certbot renew --pre-hook "systemctl stop nginx.service" --post-hook "systemctl start nginx.service"
 if certbot renew| grep -Fq "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 已更新 \e[0m" >> /etc/motd
