@@ -252,8 +252,7 @@ cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
 make
-chmod +x ./bin/*
-install ./bin/vlmcs /usr/bin/
+install ./bin/* /usr/bin/
 git clean -fdx
 }
 
@@ -302,19 +301,6 @@ function Go(){
 go get github.com/shadowsocks/go-shadowsocks2
 mv ~/go/bin/go-shadowsocks2 /usr/bin/
 systemctl --user restart go-shadowsocks2.service
-}
-
-function Openwrt(){
-#Migrated to Travis Ci
-cd /root/files/openwrt/OpenWrt-SDK-*
-for dir in $(ls -l package/ |awk '/^d/ {print $NF}')
-do
-cd package/$dir
-git fetch
-git reset --hard origin/HEAD
-cd ../..
-done
-make -k
 }
 
 ########
@@ -403,7 +389,6 @@ Usage:
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
-\t\t-o\t\tOpenwrt Compile Task
 \tLarge Script:
 \t\tNX\t\tNginx
 \t\tTMSU\t\tTransmission+Nginx
@@ -443,7 +428,6 @@ case $arg in
 -sl)Libev;;
 -sp)Python;;
 -sg)Go;;
--o)Openwrt;;
 #Large Script
 -nx|NX)NX;;
 -tmsu|TMSU)TMSU;;
@@ -455,7 +439,7 @@ Python &
 Libev &
 wait
 ;;
-update|upgrade)
+u|update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
 wget --no-cache https://raw.githubusercontent.com/SYHGroup/easy_shell/master/shellbox/shellbox.sh -O shellbox.sh
 chmod +x shellbox.sh
