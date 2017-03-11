@@ -287,7 +287,23 @@ dpkg -i simple-obfs_*.deb
 dpkg -i shadowsocks-libev_*.deb
 setcap cap_net_bind_service+ep /usr/bin/obfs-server
 systemctl restart shadowsocks-libev
-rm -rf *[shadowsocks-libev,simple-obfs]*[buildinfo,changes,deb]
+#rm -rf *[shadowsocks-libev,simple-obfs]*[buildinfo,changes,deb]
+### Preserve built debian packages ###
+wwwdir="/var/www/wwwfiles/files/ss-debian-amd64binary"
+if [ ! -d "$wwwdir" ] ; then
+mkdir -p -m 755 $wwwdir
+chown www-data:www-data $wwwdir
+[ $? == 0 ] || exit 1
+fi
+List=$(ls |xargs -n 1 echo |grep -E "\<*(shadowsocks-libev|simple-obfs)*(buildinfo|changes|deb)\>")
+[ $? == 0 ] && [ -n "$List" ] || exit 1
+echo "Moving built debian packages."
+sudo -u www-data rm -rf "${wwwdir}/*"
+for File in $List
+do
+mv "$File" "${wwwdir}/"
+chown www-data:www-data "${wwwdir}/${File}"
+done
 }
 
 function Python(){
