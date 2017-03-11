@@ -188,30 +188,30 @@ systemctl enable shadowsocks-libev
 
 function Updatemotd(){
 Checkroot
-AVAILABLE_MEM=$(free -h | sed -n '2p' | awk '{print $7}')
-DISK_FREE=$(df / -h | sed -n '2p' | awk '{print $4}')
-apt update 2>&1 | sed -n '$p' > /etc/motd
-if grep -q 'G' <<< $DISK_FREE ; then
+AVAILABLE_MEM=$(free -h |sed -n '2p' |awk '{print $7}')
+DISK_FREE=$(df / -h |sed -n '2p' |awk '{print $4}')
+apt update 2>&1 |sed -n '$p' > /etc/motd
+if grep -Fq 'G' <<< $DISK_FREE ; then
 echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m" >> /etc/motd
 else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-if certbot renew|grep -q "No renewals were attempted."
+if certbot renew| grep -q "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 最新 \e[0m" >> /etc/motd
 else
-certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start"
-if certbot renew|grep -q "No renewals were attempted."
+certbot renew --pre-hook "systemd stop nginx.service" --post-hook "systemd start nginx.service"
+if certbot renew| grep -Fq "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 已更新 \e[0m" >> /etc/motd
 else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901 vlmcs
 do
-if systemctl status $motd|grep -q "(running)"
+if systemctl status $motd| grep -q "(running)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
 else
@@ -220,11 +220,11 @@ fi &
 done
 for motd in $(ls /root/.config/systemd/user/default.target.wants/)
 do
-if systemctl --user status $motd|grep -q "(running)"
+if systemctl --user status $motd| grep -q "(running)"
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd|sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd| sed -n '$p'` >> /etc/motd
 else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl --user status $motd|sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl --user status $motd| sed -n '$p'` >> /etc/motd
 fi &
 done
 wait
