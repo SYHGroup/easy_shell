@@ -159,7 +159,7 @@ sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.0/fpm/
 }
 
 function Github(){
-git config --global user.name "simonsmh"
+git config --global user.name "Simon Shi"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
 git config --global commit.gpgsign true
@@ -252,10 +252,8 @@ cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
 make
-chmod +x ./bin/vlmcs
-chmod +x ./bin/vlmcsd
-mv ./bin/vlmcs /usr/bin/
-mv ./bin/vlmcsd /usr/bin/
+chmod +x ./bin/*
+install ./bin/vlmcs /usr/bin/
 git clean -fdx
 }
 
@@ -283,27 +281,10 @@ dpkg-buildpackage -b -uc -us
 git clean -fdx
 ## Install
 cd $rootpath
-dpkg -i simple-obfs_*.deb
-dpkg -i shadowsocks-libev_*.deb
-setcap cap_net_bind_service+ep /usr/bin/obfs-server
+dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
-#rm -rf *[shadowsocks-libev,simple-obfs]*[buildinfo,changes,deb]
-### Preserve built debian packages ###
-wwwdir="/var/wwwfiles/files/ss-debian-amd64binary"
-if [ ! -d "$wwwdir" ] ; then
-mkdir -p -m 755 "$wwwdir"
-chown www-data:www-data "$wwwdir"
-[ $? == 0 ] || exit 1
-fi
-List=$(ls |grep -E "\<*(shadowsocks-libev|simple-obfs)*(buildinfo|changes|deb)\>")
-[ $? == 0 ] && [ -n "$List" ] || exit 1
-echo "Moving built debian packages."
-sudo -u www-data rm -rf "${wwwdir}/*"
-for File in $List
-do
-mv "$File" "${wwwdir}/"
-chown www-data:www-data "${wwwdir}/${File}"
-done
+install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
+rm -rf *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
 function Python(){
@@ -429,7 +410,7 @@ Usage:
 \tShellbox:
 \t\t-server\t\tRun Production Server Automatic Update
 \t\tupdate\t\tUpdate shellbox.sh
-\t\tRUN\t\tRun with function param"
+\t\tRUN\t\tRun with function parameter"
 }
 
 ########
