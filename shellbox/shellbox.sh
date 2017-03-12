@@ -196,7 +196,7 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcs.service
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcs.service ssserver.service
 do
 if systemctl is-active $motd
 then
@@ -206,18 +206,6 @@ then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 else
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
-fi &
-done
-for motd in $(ls /root/.config/systemd/user/default.target.wants/)
-do
-if systemctl --user is-active $motd
-then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
-elif systemctl --user is-failed $motd
-then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
-else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 fi &
 done
 wait
