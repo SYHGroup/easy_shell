@@ -191,7 +191,7 @@ else
 certbot renew --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
 if certbot renew |grep -Fq "No renewals were attempted."
 then
-echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 已更新 \e[0m" >> /etc/motd
+echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;43;1m 已更新 \e[0m" >> /etc/motd
 else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
@@ -203,9 +203,9 @@ then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 elif systemctl is-failed $motd
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 fi &
 done
 for motd in $(ls /root/.config/systemd/user/default.target.wants/)
@@ -215,15 +215,14 @@ then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 elif systemctl --user is-failed $motd
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 异常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 退出 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 fi &
 done
 wait
 echo -e "\e[37;40;4m上次执行: \e[0m"`date` >> /etc/motd
 cat /etc/motd
-return 0
 }
 
 Sysupdate(){
