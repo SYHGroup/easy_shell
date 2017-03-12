@@ -7,7 +7,7 @@ mkdir -p -m 777 $rootpath
 #Small Script
 ########
 
-function Checkroot(){
+Checkroot(){
 if [[ $EUID != "0" ]]
 then
 echo "Not root user."
@@ -15,14 +15,14 @@ exit 1
 fi
 }
 
-function Sshroot(){
+Sshroot(){
 Checkroot
 sed -i s/'PermitRootLogin without-password'/'PermitRootLogin yes'/ /etc/ssh/sshd_config
 sed -i s/'PermitRootLogin prohibit-password'/'PermitRootLogin yes'/ /etc/ssh/sshd_config
 sed -i s/'Port 22'/'Port 20'/ /etc/ssh/sshd_config
 }
 
-function Switchipv6(){
+Switchipv6(){
 Checkroot
 if grep -Fq "#precedence ::ffff:0:0/96  100" /etc/gai.conf
 then
@@ -34,7 +34,7 @@ echo "Set to prefer ipv6."
 fi
 }
 
-function Saveapt(){
+Saveapt(){
 rm /var/lib/apt/lists/lock
 rm /var/cache/apt/archives/lock
 rm /var/lib/dpkg/lock
@@ -44,7 +44,7 @@ rm /var/lib/dpkg/lock
 #Server Preset
 ########
 
-function Aptstablesources(){
+Aptstablesources(){
 Checkroot
 echo -e 'deb http://ftp.debian.org/debian/ stable main contrib non-free
 deb http://security.debian.org/ stable/updates main contrib non-free
@@ -54,7 +54,7 @@ deb http://ftp.debian.org/debian/ stable-backports main contrib non-free
 deb http://repo.debiancn.org/ stable main\n' > /etc/apt/sources.list
 }
 
-function Apttestingsources(){
+Apttestingsources(){
 Checkroot
 echo -e 'deb http://ftp.debian.org/debian/ testing main contrib non-free
 deb http://security.debian.org/ testing/updates main contrib non-free
@@ -64,7 +64,7 @@ deb http://ftp.debian.org/debian experimental main
 deb http://repo.debiancn.org/ testing main\n' > /etc/apt/sources.list
 }
 
-function Setsysctl(){
+Setsysctl(){
 Checkroot
 echo -e 'kernel.domainname = simonsmh.cc
 net.core.rmem_max = 134217728
@@ -93,7 +93,7 @@ net.ipv4.tcp_rmem = 4096 87380 67108864' > /etc/sysctl.conf
 sysctl -p
 }
 
-function Setdns(){
+Setdns(){
 Checkroot
 apt install -y resolvconf
 echo -e 'nameserver 2001:4860:4860:0:0:0:0:8888
@@ -103,7 +103,7 @@ nameserver 8.8.4.4\n' > /etc/resolvconf/resolv.conf.d/base
 resolvconf -u
 }
 
-function Setgolang(){
+Setgolang(){
 Checkroot
 apt install golang
 mkdir ~/go
@@ -112,7 +112,7 @@ echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
 source ~/.bashrc
 }
 
-function Zsh(){
+Zsh(){
 apt -y install git zsh powerline
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
@@ -123,28 +123,18 @@ echo "source ~/.bashrc" >> ~/.zshrc
 chsh -s zsh
 }
 
-function Desktop(){
+Desktop(){
 Checkroot
-### For Ordinary Vnc Server ###
-#apt install -y tightvncserver xfce4 xfce4-goodies xorg fonts-noto
-#wget https://github.com/SYHGroup/easysystemd/raw/master/vncserver%40.service -O /etc/systemd/system/vncserver@.service
-#systemctl enable vncserver@1.service
-#vncserver :1
-#vncserver -kill :1
-#systemctl start vncserver@1.service
-### For x0vncserver ###
 apt install -y tigervnc-scraping-server tigervnc-standalone-server tigervnc-xorg-extension xfce4 xfce4-goodies xorg fonts-noto
 wget https://github.com/SYHGroup/easysystemd/raw/master/x0vncserver%40.service -O /etc/systemd/system/x0vncserver@.service
 systemctl enable x0vncserver@5901.service
 systemctl start x0vncserver@5901.service
 }
 
-function LNMP(){
+LNMP(){
 Checkroot
 apt install nginx-extras mariadb-client mariadb-server php7.0-[^dev,apcu,redis]
-systemctl enable nginx
-systemctl enable mysql
-systemctl enable php7.0-fpm
+systemctl enable nginx mysql php7.0-fpm
 sed -i  s/'upload_max_filesize = 2M'/'upload_max_filesize = 1024M'/ /etc/php/7.0/fpm/php.ini
 sed -i  s/'post_max_size = 8M'/'post_max_size = 1024M'/ /etc/php/7.0/fpm/php.ini
 sed -i  s/'short_open_tag = Off'/'short_open_tag = On'/ /etc/php/7.0/fpm/php.ini
@@ -158,7 +148,7 @@ sed -i  s/';zlib.output_compression_level = -1'/'zlib.output_compression_level 
 sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.0/fpm/php.ini
 }
 
-function Github(){
+Github(){
 git config --global user.name "Simon Shi"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
@@ -168,28 +158,25 @@ echo "export GPG_TTY=$(tty)" >>~/.bashrc
 #Import gpg key from keybase first
 }
 
-function SSPreset(){
+SSPreset(){
 Checkroot
 apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang
 apt install -y --no-install-recommends asciidoc xmlto
-wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/user/ssserver.service 
-Libsodium
-Mbedtls
-Python
-Setgolang
-Libev
-systemctl --user enable ssserver.service
-systemctl enable shadowsocks-libev
+wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/system/ssserver.service
+Python &
+Libev &
+systemctl enable ssserver shadowsocks-libev
 }
 
 ########
 #Production Server Automatic Update
 ########
 
-function Updatemotd(){
+Updatemotd(){
 Checkroot
-AVAILABLE_MEM=$(free -h |sed -n '2p' |awk '{print $7}')
-DISK_FREE=$(df / -h |sed -n '2p' |awk '{print $4}')
+local AVAILABLE_MEM=$(free -h |sed -n '2p' |awk '{print $7}')
+local DISK_FREE=$(df / -h |sed -n '2p' |awk '{print $4}')
+local XDG_RUNTIME_DIR=/run/user/$(id -u)
 apt update 2>&1 |sed -n '$p' > /etc/motd
 if grep -Fq 'G' <<< $DISK_FREE ; then
 echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m" >> /etc/motd
@@ -201,7 +188,7 @@ if certbot renew |grep -Fq "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 最新 \e[0m" >> /etc/motd
 else
-certbot renew --pre-hook "systemctl stop nginx.service" --post-hook "systemctl start nginx.service"
+certbot renew --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
 if certbot renew |grep -Fq "No renewals were attempted."
 then
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 已更新 \e[0m" >> /etc/motd
@@ -209,51 +196,46 @@ else
 echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
 fi
 fi
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901 vlmcs.service
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcs.service
 do
-if systemctl status $motd |grep -Fq "(running)"
+if systemctl is-active $motd
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
-elif systemctl status $motd |grep -Fq "inactive (dead)"
+elif systemctl is-failed $motd
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 fi &
 done
-# Temporary fix for systemd --user bug
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
 for motd in $(ls /root/.config/systemd/user/default.target.wants/)
 do
-if systemctl --user status $motd |grep -Fq "(running)"
+if systemctl --user is-active $motd
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
-elif systemctl --user status $motd |grep -Fq "inactive (dead)"
+elif systemctl --user is-failed $motd
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 异常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 退出 \e[0m\n"`systemctl --user status $motd |sed -n '$p'` >> /etc/motd
 fi &
 done
 wait
-unset XDG_RUNTIME_DIR
 echo -e "\e[37;40;4m上次执行: \e[0m"`date` >> /etc/motd
 cat /etc/motd
+return 0
 }
 
-function Sysupdate(){
+Sysupdate(){
 Checkroot
 apt update
-systemctl stop nginx
-systemctl stop php7.0-fpm
+systemctl stop php7.0-fpm nginx
 apt -y full-upgrade
-systemctl start php7.0-fpm
-systemctl start nginx
-#apt -y autoremove
+systemctl start php7.0-fpm nginx
 apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
 }
 
-function Vlmcsd(){
+Vlmcsd(){
 Checkroot
 cd $rootpath
 git clone https://github.com/Wind4/vlmcsd
@@ -265,7 +247,7 @@ install ./bin/* /usr/bin/
 git clean -fdx
 }
 
-function Libev(){
+Libev(){
 Checkroot
 ## Libev
 cd $rootpath
@@ -295,32 +277,32 @@ install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
 rm -rf *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
-function Python(){
+Python(){
 Checkroot
 cd $rootpath
-git clone https://github.com/shadowsocksr/shadowsocksr.git
+git clone https://github.com/shadowsocksr/shadowsocksr
 cd shadowsocksr
 git fetch
 git reset --hard origin/HEAD
 python setup.py install
-systemctl --user restart ssserver.service
+systemctl restart ssserver
 }
 
-function Go(){
+Go(){
 go get github.com/shadowsocks/go-shadowsocks2
-mv ~/go/bin/go-shadowsocks2 /usr/bin/
-systemctl --user restart go-shadowsocks2.service
+install ~/go/bin/go-shadowsocks2 /usr/bin/
+systemctl restart go-shadowsocks2
 }
 
 ########
 #Large Script
 ########
 
-function NX(){
+NX(){
 Checkroot
 Aptstablesources
 apt update
-apt install -y nginx-extras screen
+apt install -y nginx-extras tmux
 echo -e 'server {
 listen 80 default_server;
 listen [::]:80 default_server;
@@ -331,14 +313,14 @@ root /root/;
 }\n' > /etc/nginx/sites-available/default
 sed -i s/'user www-data'/'user root'/ /etc/nginx/nginx.conf
 systemctl enable nginx
-systemctl nginx restart
+systemctl restart nginx
 }
 
-function TMSU(){
+TMSU(){
 Checkroot
 Aptstablesources
 apt update
-apt install -y transmission-daemon nginx-extras screen
+apt install -y transmission-daemon nginx-extras tmux
 systemctl stop transmission-daemon
 #username="transmission"
 #password="transmission"
@@ -362,17 +344,15 @@ proxy_pass_header  X-Transmission-Session-Id;
 wget https://github.com/ronggang/transmission-web-control/raw/master/release/tr-control-easy-install.sh
 bash tr-control-easy-install.sh
 rm -rf tr-control-easy-install.sh
-systemctl enable transmission-daemon
-systemctl enable nginx
-systemctl restart transmission-daemon
-systemctl restart nginx
+systemctl enable transmission-daemon nginx
+systemctl restart transmission-daemon nginx
 }
 
 ########
 #Help
 ########
 
-function Help(){
+Help(){
 echo -e `date`"
 Usage:
 \tSmall Script:
@@ -404,7 +384,7 @@ Usage:
 \tShellbox:
 \t\t-server\t\tRun Production Server Automatic Update
 \t\tupdate\t\tUpdate shellbox.sh
-\t\tRUN\t\tRun with function parameter"
+\t\tRUN\t\tRun with parameter"
 }
 
 ########
