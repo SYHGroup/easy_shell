@@ -213,7 +213,7 @@ for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.s
 do
 if systemctl status $motd |grep -Fq "(running)"
 then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd|sed -n '$p'` >> /etc/motd
+echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
 elif systemctl status $motd |grep -Fq "inactive (dead)"
 then
 echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
@@ -455,7 +455,7 @@ chmod +x shellbox.sh
 exit 0
 ;;
 RUN)
-`echo -n $*|sed -e 's/^RUN //g'|awk -F ' ' '{ print $0 }'`
+`echo -n $* |sed -e 's/^RUN //g' |awk -F ' ' '{ print $0 }'`
 exit $?
 ;;
 *)
