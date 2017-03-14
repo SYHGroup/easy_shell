@@ -276,7 +276,7 @@ systemctl restart ssserver
 }
 
 Go(){
-go get github.com/shadowsocks/go-shadowsocks2
+go get -u github.com/shadowsocks/go-shadowsocks2
 install ~/go/bin/go-shadowsocks2 /usr/bin/
 systemctl restart go-shadowsocks2
 }
@@ -411,6 +411,7 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
+Go &
 Python &
 Libev &
 wait
