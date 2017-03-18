@@ -85,8 +85,9 @@ net.ipv4.conf.default.rp_filter=1
 net.ipv4.conf.all.rp_filter=1
 net.ipv4.ip_forward=1
 net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.default.forwarding=1
 net.ipv6.conf.all.accept_ra=2
-net.ipv6.conf.eth0.accept_ra=2
+net.ipv6.conf.default.accept_ra=2
 net.ipv4.tcp_congestion_control = bbr
 net.ipv4.tcp_wmem = 4096 65536 67108864
 net.ipv4.tcp_rmem = 4096 87380 67108864' > /etc/sysctl.conf
@@ -107,7 +108,7 @@ Setgolang(){
 Checkroot
 apt install golang
 mkdir ~/go
-echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+echo 'export GOPATH=$GOPATH:$HOME/go' >> ~/.bashrc
 echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
 source ~/.bashrc
 }
@@ -260,6 +261,7 @@ git clean -fdx
 cd $rootpath
 dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
+rm -rf /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
 install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
 rm -rf *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
