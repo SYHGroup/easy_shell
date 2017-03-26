@@ -100,7 +100,7 @@ else
 	Start
 fi
 if $FANCYDISPLAY ; then
-echo -e "\e[1;34m                                   
+PicShadowsocks="                                   
                                  CO
                               Ls40a
                           e088S4S8C
@@ -119,7 +119,8 @@ echo -e "\e[1;34m
                 Saa0C       3      
                 Ta4e               
                 T0                 
-                O                  \e[0m"
+                O                  "
+systemctl is-failed shadowsocks-libev-redir@"$ssconfig".service >/dev/null && echo -e "\e[41;34m${PicShadowsocks}\e[0m\nShadowsocks-libev启动失败！" || echo -e "\e[1;34m${PicShadowsocks}\e[0m"
 fi
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
