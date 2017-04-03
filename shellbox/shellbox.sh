@@ -113,14 +113,12 @@ echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
 source ~/.bashrc
 }
 
-PAM(){
-Checkroot
-sed -i "s/$1/$2/g" /etc/pam.d/chsh
-}
-
-Zsh(){
+Setsh(){
+read -p "Choose your team: 1.zsh 2.fish "
+sed -i s/required/sufficient/g /etc/pam.d/chsh
+if [ $REPLY = 1 ]
+then
 apt -y install git mosh zsh powerline
-PAM required sufficient
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp -f ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
@@ -128,29 +126,16 @@ sed -i "s/robbyrussell/ys/g" ~/.zshrc
 sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo zsh-syntax-highlighting command-not-found common-aliases debian gitfast gradle npm python repo screen systemd dircycle/g" ~/.zshrc
 echo "source ~/.bashrc" >> ~/.zshrc
 chsh -s /usr/bin/zsh
-PAM sufficient required
-}
-
-Fish(){
-apt -y install git mosh fish powerline
-PAM required sufficient
-# Here should be oh-my-fish
-rm ~/.config/fish/config.fish
-echo "source ~/.bashrc" >> ~/.config/fish/config.fish
-chsh -s /usr/bin/fish
-PAM sufficient required
-}
-
-Setsh(){
-read -p "Choose your team: 1.zsh 2.fish "
-if [ $REPLY = 1 ]
-then
-Zsh
 elif [ $REPLY = 2 ]
 then
-Fish
+apt -y install git mosh fish powerline
+rm -r ~/.config/fish/config.fish ~/.config/fish/functions/
+mkdir -p ~/.config/fish/functions/
+wget https://github.com/fisherman/fisherman/raw/master/fisher.fish -O ~/.config/fish/functions/fisher.fish
+echo "source ~/.bashrc" >> ~/.config/fish/config.fish
+chsh -s /usr/bin/fish
 else
-echo Bad syntax
+echo Bad syntax.
 fi
 }
 
@@ -186,7 +171,7 @@ git config --global credential.helper store
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 echo "export GPG_TTY=$(tty)" >>~/.bashrc
-#Import gpg key from keybase first
+#Import gpg key from keybase.io first
 }
 
 SSPreset(){
@@ -291,9 +276,9 @@ git clean -fdx
 cd $rootpath
 dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
-rm -rf /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
+rm /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
 install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
-rm -rf *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
+rm *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
 Python(){
@@ -362,7 +347,7 @@ proxy_pass_header  X-Transmission-Session-Id;
 }}\n' > /etc/nginx/sites-available/default
 wget https://github.com/ronggang/transmission-web-control/raw/master/release/tr-control-easy-install.sh
 bash tr-control-easy-install.sh
-rm -rf tr-control-easy-install.sh
+rm tr-control-easy-install.sh
 systemctl enable transmission-daemon nginx
 systemctl restart transmission-daemon nginx
 }
