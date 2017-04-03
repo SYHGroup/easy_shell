@@ -113,15 +113,45 @@ echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
 source ~/.bashrc
 }
 
+PAM(){
+Checkroot
+sed -i "s/$1/$2/g" /etc/pam.d/chsh
+}
+
 Zsh(){
-apt -y install git zsh powerline
+apt -y install git mosh zsh powerline
+PAM required sufficient
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 cp -f ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
 sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo zsh-syntax-highlighting command-not-found common-aliases debian gitfast gradle npm python repo screen systemd dircycle/g" ~/.zshrc
 echo "source ~/.bashrc" >> ~/.zshrc
-chsh -s zsh
+chsh -s /usr/bin/zsh
+PAM sufficient required
+}
+
+Fish(){
+apt -y install git mosh fish powerline
+PAM required sufficient
+# Here should be oh-my-fish
+rm ~/.config/fish/config.fish
+echo "source ~/.bashrc" >> ~/.config/fish/config.fish
+chsh -s /usr/bin/fish
+PAM sufficient required
+}
+
+Setsh(){
+read -p "Choose your team: 1.zsh 2.fish "
+if [ $REPLY = 1 ]
+then
+Zsh
+elif [ $REPLY = 2 ]
+then
+Fish
+else
+echo Bad syntax
+fi
 }
 
 Desktop(){
@@ -355,7 +385,7 @@ Usage:
 \t\t-setsysctl\tSet sysctl
 \t\t-setdns\t\tSet dns
 \t\t-setgolang\tSet golang
-\t\t-setzsh\t\tSet zsh
+\t\t-setsh\t\tSet custome shell
 \t\t-setdesktop\tSet Xfce
 \t\t-lnmp\t\tNginx+Mariadb+PHP7
 \t\t-gitpreset\tGitHub Preset
@@ -394,7 +424,7 @@ case $arg in
 -setsysctl)Setsysctl;;
 -setdns)Setdns;;
 -setgolang)Setgolang;;
--setzsh)Zsh;;
+-setsh)Setsh;;
 -setdesktop)Desktop;;
 -lnmp|LNMP)LNMP;;
 -gitpreset)Github;;
