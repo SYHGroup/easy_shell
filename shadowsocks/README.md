@@ -1,7 +1,7 @@
 # easyshell/shadowsocks  
 旨在分享linux下使用shadowsocks的经验。  
 ## ss-iptables.sh:  
-依赖`shadowsocks-libev`,`ipset`(optional)。  
+依赖`shadowsocks-libev`,`systemd`,`ipset`。  
 配置完成files/中的所有文件后，直接执行 sudo ./ss-iptables.sh 即可自动判断运行状态 也可以增加参数 /update/start/stop/restart 手动运行。  
 ## files/ 中包含:  
 chinadns和shadowsocks-libev-nat的systemd脚本  
