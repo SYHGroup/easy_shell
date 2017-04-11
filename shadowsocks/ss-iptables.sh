@@ -4,7 +4,8 @@ localport="1080"
 ssdomain="ipv4.jerry981028.ml"
 ssconfig="config-client"	#完整路径为/etc/shadowsocks-libev/config-client.json
 sstool="ss-nat"
-USE_CHINADNS=false	#使用true,false或/bin/true,/bin/false
+USE_CHINADNS=true	#使用true,false或/bin/true,/bin/false
+STOP_CHINADNS=false	#退出shadowsocks时是否关闭chinadns
 FANCYDISPLAY=true	#用于在终端中画出一个小飞机图标
 #############################
 function ErrorSolve(){
@@ -55,14 +56,14 @@ systemctl start shadowsocks-libev-redir@"$ssconfig".service
 $sstool -s $serverip -l $localport -i chnroute.txt -o
 #Start chinadns if necessary
 if $USE_CHINADNS ; then
-systemctl start chinadns.service
+systemctl is-active chinadns.service >/dev/null || systemctl start chinadns.service
 fi
 }
 function Stop(){
 $sstool -f
 systemctl stop shadowsocks-libev-redir@"$ssconfig".service
 if $USE_CHINADNS ; then
-systemctl stop chinadns.service
+${STOP_CHINADNS} && systemctl stop chinadns.service
 fi
 rm /run/ss-iptables.lock
 }
@@ -121,6 +122,9 @@ PicShadowsocks="
                 T0                 
                 O                  "
 systemctl is-failed shadowsocks-libev-redir@"$ssconfig".service >/dev/null && echo -e "\e[41;34m${PicShadowsocks}\e[0m\nShadowsocks-libev启动失败！" || echo -e "\e[1;34m${PicShadowsocks}\e[0m"
+if $USE_CHINADNS ; then
+systemctl is-failed chinadns.service >/dev/null && echo "ChinaDns启动失败！"
+fi
 fi
 read -n 1 -t 5 -p "等待5秒或任意键退出"
 ;;
