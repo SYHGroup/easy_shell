@@ -176,7 +176,7 @@ echo "export GPG_TTY=$(tty)" >>~/.bashrc
 
 SSPreset(){
 Checkroot
-apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang
+apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang libwebsockets-dev libjson-c-dev libssl-dev
 apt install -y --no-install-recommends asciidoc xmlto
 wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/system/ssserver.service
 Python &
@@ -238,6 +238,13 @@ systemctl start php7.0-fpm nginx
 apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
 }
 
+Gcm(){
+Checkroot
+apt install build-essential perl libssl-dev
+cpan -i App::cpanminus
+cpanm Mojo::Webqq Mojo::Weixin
+}
+
 Vlmcsd(){
 Checkroot
 cd $rootpath
@@ -248,6 +255,19 @@ git reset --hard origin/HEAD
 make
 install ./bin/* /usr/bin/
 git clean -fdx
+}
+
+Ttyd(){
+Checkroot
+cd $rootpath
+git clone https://github.com/tsl0922/ttyd
+cd ttyd
+git fetch
+git reset --hard origin/HEAD
+dpkg-buildpackage -b -uc -us
+git clean -fdx
+dpkg -i ttyd_*.deb
+rm ttyd*.{buildinfo,changes,deb}
 }
 
 Libev(){
@@ -379,6 +399,7 @@ Usage:
 \t\t-m\t\tUpdate motd
 \t\t-u\t\tSystem update
 \t\t-v\t\tCompile Vlmcsd
+\t\t-t\t\tCompile Ttyd
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
@@ -417,6 +438,7 @@ case $arg in
 #Production Server Automatic Update
 -m)Updatemotd;;
 -u)Sysupdate;;
+-t)Ttyd;;
 -v)Vlmcsd;;
 -sl)Libev;;
 -sp)Python;;
@@ -428,6 +450,7 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
+Ttyd &
 Go &
 Python &
 Libev &
