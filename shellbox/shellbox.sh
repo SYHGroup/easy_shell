@@ -464,7 +464,6 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
-Ttyd &
 Go &
 Python &
 Libev &
