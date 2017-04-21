@@ -276,7 +276,7 @@ cd $rootpath
 git clone https://anonscm.debian.org/git/collab-maint/libwebsockets.git -b debian-v2.0-stable
 cd libwebsockets
 git fetch
-git reset --hard origin/HEAD
+git reset --hard origin/debian-v2.0-stable
 sed -i 's/-DLWS_WITH_LIBUV=ON/-DLWS_WITH_LIBUV=ON -DLWS_UNIX_SOCK=ON/g' debian/rules
 dpkg-buildpackage -b -uc -us
 git clean -fdx
