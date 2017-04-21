@@ -266,7 +266,7 @@ git fetch
 git reset --hard origin/HEAD
 dpkg-buildpackage -b -uc -us
 git clean -fdx
-apt -y install ../ttyd_*.deb
+dpkg -i ../ttyd_*.deb
 rm ../ttyd*.{buildinfo,changes,deb}
 }
 
@@ -280,7 +280,7 @@ git reset --hard origin/debian-v2.0-stable
 sed -i 's/-DLWS_WITH_LIBUV=ON/-DLWS_WITH_LIBUV=ON -DLWS_UNIX_SOCK=ON/g' debian/rules
 dpkg-buildpackage -b -uc -us
 git clean -fdx
-apt -y install ../libwebsockets-dev_*.deb ../libwebsockets8_*.deb
+dpkg -i ../libwebsockets-dev_*.deb ../libwebsockets8_*.deb
 rm ../libwebsockets*.{buildinfo,changes,deb}
 }
 
