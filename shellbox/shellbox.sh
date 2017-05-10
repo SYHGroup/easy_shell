@@ -217,7 +217,7 @@ fi
 fi
 COMMENT
 ##########
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service ssserver.service go-shadowsocks2.service
+for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service ssserver.service
 do
 if systemctl is-active $motd
 then
@@ -315,19 +315,15 @@ git clean -fdx
 cd $rootpath
 dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
-rm /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
-install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
+#rm /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
+#install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
 rm *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
 Python(){
 Checkroot
 cd $rootpath
-git clone https://github.com/shadowsocksr/shadowsocksr
-cd shadowsocksr
-git fetch
-git reset --hard origin/HEAD
-python setup.py install
+pip install git+https://github.com/shadowsocksr/shadowsocksr.git
 systemctl restart ssserver
 }
 
@@ -469,9 +465,7 @@ case $arg in
 -server)
 Sysupdate
 Vlmcsd &
-Go &
 Python &
-Libev &
 wait
 ;;
 u|update|upgrade)
