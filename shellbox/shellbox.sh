@@ -478,9 +478,9 @@ exit 0
 ;;
 fishroom)
 export PYTHONPATH=/root/fishroom
-python3 -m fishroom.fishroom &
-python3 -m fishroom.telegram &
-python3 -m fishroom.wechat &
+tmux new -d python3 -m fishroom.fishroom &
+tmux new -d python3 -m fishroom.telegram &
+tmux new -d python3 -m fishroom.wechat &
 ;;
 killfishroom)
 pkill python3
@@ -494,4 +494,4 @@ Help
 ;;
 esac
 done
-[[ ! -n "$@" ]] && Help && exit 1
+[[ ! -n "$@" ]] && Help
