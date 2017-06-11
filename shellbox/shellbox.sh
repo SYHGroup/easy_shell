@@ -424,7 +424,9 @@ Usage:
 \tShellbox:
 \t\t-server\t\tRun Production Server Automatic Update
 \t\tupdate\t\tUpdate shellbox.sh
-\t\tRUN\t\tRun with parameter"
+\t\tRUN\t\tRun with parameter
+\t\tfishroom\tRun Fishroom
+\t\tkillfishroom\tKill Fishroom"
 }
 
 ########
@@ -473,6 +475,15 @@ cd $(cd "$(dirname "$0")"; pwd)
 wget --no-cache https://raw.githubusercontent.com/SYHGroup/easy_shell/master/shellbox/shellbox.sh -O shellbox.sh
 chmod +x shellbox.sh
 exit 0
+;;
+fishroom)
+export PYTHONPATH=/root/fishroom
+python3 -m fishroom.fishroom &
+python3 -m fishroom.telegram &
+python3 -m fishroom.wechat &
+;;
+killfishroom)
+pkill python3
 ;;
 RUN)
 `echo -n $* |sed -e 's/^RUN //g' |awk -F ' ' '{ print $0 }'`
