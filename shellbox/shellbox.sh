@@ -478,12 +478,12 @@ exit 0
 ;;
 fishroom)
 export PYTHONPATH=/root/fishroom
-tmux new -d python3 -m fishroom.fishroom &
-tmux new -d python3 -m fishroom.telegram &
-tmux new -d python3 -m fishroom.wechat &
+tmux new-session -d -s fishroom -n core python3 -m fishroom.fishroom
+tmux new-window -n telegram python3 -m fishroom.telegram
+tmux new-window -n wechat python3 -m fishroom.wechat
 ;;
 killfishroom)
-pkill python3
+tmux kill-session -t fishroom
 ;;
 RUN)
 `echo -n $* |sed -e 's/^RUN //g' |awk -F ' ' '{ print $0 }'`
