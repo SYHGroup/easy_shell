@@ -64,6 +64,11 @@ deb http://ftp.debian.org/debian/ experimental main contrib non-free
 deb http://repo.debiancn.org/ stretch main experimental\n' > /etc/apt/sources.list
 }
 
+Aptunstablesources(){
+echo -e 'deb http://ftp.debian.org/debian/ unstable main contrib non-free
+deb http://repo.debiancn.org/ stretch main experimental\n' > /etc/apt/sources.list
+}
+
 Setsysctl(){
 Checkroot
 echo -e 'kernel.domainname = simonsmh.cc
@@ -315,8 +320,6 @@ git clean -fdx
 cd $rootpath
 dpkg -i {shadowsocks-libev,simple-obfs}_*.deb
 systemctl restart shadowsocks-libev
-#rm /root/files/*{shadowsocks-libev,simple-obfs}_*.deb
-#install -o www-data *{shadowsocks-libev,simple-obfs}_*.deb /root/files/
 rm *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 }
 
@@ -402,6 +405,7 @@ Usage:
 \tServer Preset:
 \t\t-stable\t\tApt stable sources
 \t\t-testing\tApt testing sources
+\t\t-unstable\tApt unstable sources
 \t\t-setsysctl\tSet sysctl
 \t\t-setdns\t\tSet dns
 \t\t-setgolang\tSet golang
@@ -427,6 +431,7 @@ Usage:
 \t\tRUN\t\tRun with parameter
 \t\tfishroom\tRun Fishroom
 \t\tkillfishroom\tKill Fishroom"
+exit 0
 }
 
 ########
@@ -444,6 +449,7 @@ case $arg in
 #Server Preset
 -stable)Aptstablesources;;
 -testing)Apttestingsources;;
+-unstable)Aptunstablesources;;
 -setsysctl)Setsysctl;;
 -setdns)Setdns;;
 -setgolang)Setgolang;;
