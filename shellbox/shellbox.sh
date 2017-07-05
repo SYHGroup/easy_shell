@@ -205,24 +205,7 @@ else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-##########
-echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 停止更新 \e[0m" >> /etc/motd
-:<<COMMENT
-if certbot renew |grep -Fq "No renewals were attempted."
-then
-echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;42;1m 最新 \e[0m" >> /etc/motd
-else
-certbot renew --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
-if certbot renew |grep -Fq "No renewals were attempted."
-then
-echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;43;1m 已更新 \e[0m" >> /etc/motd
-else
-echo -e "\e[37;44;1mSSL 证书状态: \e[0m\e[37;41;1m 无法更新 \e[0m" >> /etc/motd
-fi
-fi
-COMMENT
-##########
-for motd in nginx.service mysql.service php7.0-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service ssserver.service
+for motd in nginx.service mysql.service php7.1-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service ssserver.service
 do
 if systemctl is-active $motd
 then
