@@ -5,6 +5,11 @@ Domain="***.**"
 SubDomain="***"
 APIKey="******"
 ###############
+if [ ! -x "$(command -v curl)" ]
+then
+echo "Cannot find cURL."
+exit 1
+fi
 RecodIP=$(curl -skX GET members.3322.org/dyndns/getip)
 ZoneINFO=$(curl -skX GET https://api.cloudflare.com/client/v4/zones/ -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}")
 ZoneID=$(echo ${ZoneINFO}| sed -n 's/.*"id":"\(.*\)","name":"'${Domain}'".*/\1/p')
