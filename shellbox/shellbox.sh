@@ -51,7 +51,7 @@ deb http://security.debian.org/ stable/updates main contrib non-free
 deb http://ftp.debian.org/debian/ stable-updates main contrib non-free
 deb http://ftp.debian.org/debian/ stable-proposed-updates main contrib non-free
 deb http://ftp.debian.org/debian/ stable-backports main contrib non-free
-deb http://repo.debiancn.org/ stable main experimental\n' > /etc/apt/sources.list
+deb http://repo.debiancn.org/ stretch main experimental\n' > /etc/apt/sources.list
 }
 
 Apttestingsources(){
@@ -61,12 +61,12 @@ deb http://security.debian.org/ testing/updates main contrib non-free
 deb http://ftp.debian.org/debian/ testing-updates main contrib non-free
 deb http://ftp.debian.org/debian/ testing-proposed-updates main contrib non-free
 deb http://ftp.debian.org/debian/ experimental main contrib non-free
-deb http://repo.debiancn.org/ stretch main experimental\n' > /etc/apt/sources.list
+deb http://repo.debiancn.org/ buster main experimental\n' > /etc/apt/sources.list
 }
 
 Aptunstablesources(){
 echo -e 'deb http://ftp.debian.org/debian/ unstable main contrib non-free
-deb http://repo.debiancn.org/ stretch main experimental\n' > /etc/apt/sources.list
+deb http://repo.debiancn.org/ buster main experimental\n' > /etc/apt/sources.list
 }
 
 Setsysctl(){
