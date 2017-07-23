@@ -430,7 +430,6 @@ case $arg in
 -tmsu|TMSU)TMSU;;
 #Shellbox
 -server)
-Sysupdate
 Vlmcsd &
 Python &
 wait
