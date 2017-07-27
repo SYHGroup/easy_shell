@@ -285,7 +285,7 @@ rm *{shadowsocks-libev,simple-obfs}*.{buildinfo,changes,deb}
 Python(){
 Checkroot
 cd $rootpath
-pip install --upgrade git+https://github.com/shadowsocksr/shadowsocksr.git
+pip install --upgrade git+https://github.com/shadowsocks/shadowsocks.git@master
 systemctl restart ssserver
 }
 
