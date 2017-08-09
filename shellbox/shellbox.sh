@@ -443,8 +443,8 @@ exit 0
 fishroom)
 export PYTHONPATH=/root/fishroom
 tmux new-session -d -s fishroom -n core python3 -m fishroom.fishroom
-tmux new-window -n telegram python3 -m fishroom.telegram
-#tmux new-window -n web python3 -m fishroom.web
+tmux new-window -t fishroom -n telegram python3 -m fishroom.telegram
+#tmux new-window -t fishroom -n web python3 -m fishroom.web
 ;;
 killfishroom)
 tmux kill-session -t fishroom
