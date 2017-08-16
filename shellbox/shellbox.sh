@@ -401,7 +401,7 @@ exit 0
 ########
 #Running
 ########
-
+[ -z $1 ] && arg = help
 for arg in "$@"
 do
 case $arg in
@@ -449,7 +449,7 @@ fishroom)
 export PYTHONPATH=/root/fishroom
 tmux new-session -d -s fishroom -n core python3 -m fishroom.fishroom
 tmux new-window -t fishroom -n telegram python3 -m fishroom.telegram
-#tmux new-window -t fishroom -n web python3 -m fishroom.web
+tmux new-window -t fishroom -n web python3 -m fishroom.web
 ;;
 killfishroom)
 tmux kill-session -t fishroom
@@ -458,9 +458,13 @@ RUN)
 `echo -n $* |sed -e 's/^RUN //g' |awk -F ' ' '{ print $0 }'`
 exit $?
 ;;
+-h)
+Help
+;;
 *)
 Help
+exit 1
 ;;
 esac
 done
-[[ ! -n "$@" ]] && Help
+exit 0
