@@ -46,32 +46,33 @@ rm /var/lib/dpkg/lock
 
 Debiancnsource(){
 Checkroot
-echo "deb https://repo.debiancn.org/ unstable main" > /etc/apt/sources.list.d/debiancn.list
+echo "deb https://repo.debiancn.org/ buster main" > /etc/apt/sources.list.d/debiancn.list
 wget https://repo.debiancn.org/pool/main/d/debiancn-keyring/debiancn-keyring_0~20161212_all.deb -O /tmp/debiancn-keyring.deb
 apt install /tmp/debiancn-keyring.deb
 }
 
 Aptstablesources(){
 Debiancnsource
-echo -e 'deb http://deb.debian.org/debian/ stable main contrib non-free
-deb http://security.debian.org/ stable/updates main contrib non-free
-deb http://deb.debian.org/debian/ stable-updates main contrib non-free
-deb http://deb.debian.org/debian/ stable-proposed-updates main contrib non-free
-deb http://deb.debian.org/debian/ stable-backports main contrib non-free\n' > /etc/apt/sources.list
+echo -e 'deb https://deb.debian.org/debian/ stable main contrib non-free
+deb https://deb.debian.org/debian/ stable-updates main contrib non-free
+deb https://deb.debian.org/debian/ stable-proposed-updates main contrib non-free
+deb https://deb.debian.org/debian/ stable-backports main contrib non-free
+deb https://deb.debian.org/debian-security/ stable/updates main\n' > /etc/apt/sources.list
 }
 
 Apttestingsources(){
 Debiancnsource
-echo -e 'deb http://deb.debian.org/debian/ testing main contrib non-free
-deb http://security.debian.org/ testing/updates main contrib non-free
-deb http://deb.debian.org/debian/ testing-updates main contrib non-free
-deb http://deb.debian.org/debian/ testing-proposed-updates main contrib non-free
-deb http://deb.debian.org/debian/ experimental main contrib non-free\n' > /etc/apt/sources.list
+echo -e 'deb https://deb.debian.org/debian/ testing main contrib non-free
+deb https://deb.debian.org/debian/ testing-updates main contrib non-free
+deb https://deb.debian.org/debian/ testing-proposed-updates main contrib non-free
+deb https://deb.debian.org/debian-security/ testing/updates main contrib non-free
+deb https://deb.debian.org/debian/ experimental main contrib non-free\n' > /etc/apt/sources.list
 }
 
 Aptunstablesources(){
 Debiancnsource
-echo -e 'deb http://deb.debian.org/debian/ unstable main contrib non-free' > /etc/apt/sources.list
+echo -e 'deb https://deb.debian.org/debian/ unstable main contrib non-free
+deb https://deb.debian.org/debian/ experimental main contrib non-free\n' > /etc/apt/sources.list
 }
 
 Setsysctl(){
@@ -210,13 +211,6 @@ systemctl stop php7.0-fpm nginx
 apt -y full-upgrade
 systemctl start php7.0-fpm nginx
 apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
-}
-
-Gcm(){
-Checkroot
-apt install build-essential perl libssl-dev
-cpan -i App::cpanminus
-cpanm Mojo::Webqq Mojo::Weixin
 }
 
 Vlmcsd(){
