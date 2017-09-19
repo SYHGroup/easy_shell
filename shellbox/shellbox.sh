@@ -163,7 +163,7 @@ echo "export GPG_TTY=$(tty)" >>~/.bashrc
 
 SSPreset(){
 Checkroot
-apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libev-dev libudns-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang libwebsockets-dev libjson-c-dev libssl-dev
+apt install -y build-essential gettext build-essential autoconf libtool libpcre3-dev libc-ares-dev libev-dev automake libcork-dev libcorkipset-dev libmbedtls-dev libsodium-dev python-pip python-m2crypto golang libwebsockets-dev libjson-c-dev libssl-dev
 apt install -y --no-install-recommends asciidoc xmlto
 wget https://github.com/SYHGroup/easy_systemd/raw/master/ssserver.service -O /etc/systemd/system/ssserver.service
 Python &
@@ -395,9 +395,9 @@ exit 0
 ########
 #Running
 ########
-[ -z $1 ] && arg = help
 for arg in "$@"
 do
+[ -z $1 ] && arg="help"
 case $arg in
 #Small Script
 -checkroot)Checkroot;;
