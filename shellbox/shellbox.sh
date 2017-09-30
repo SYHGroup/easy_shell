@@ -122,7 +122,7 @@ wget https://github.com/fisherman/fisherman/raw/master/fisher.fish -O ~/.config/
 echo "source ~/.bashrc" >> ~/.config/fish/config.fish
 chsh -s /usr/bin/fish
 else
-echo Bad syntax.
+echo "Bad syntax."
 fi
 }
 
@@ -136,7 +136,7 @@ systemctl start x0vncserver@5901.service
 
 LNMP(){
 Checkroot
-apt install nginx-extras mariadb-client mariadb-server php7.0-[^dev]
+apt install nginx-extras mariadb-client mariadb-server php7.1-[^dev]
 systemctl enable nginx mysql php7.1-fpm
 sed -i  s/'upload_max_filesize = 2M'/'upload_max_filesize = 100M'/ /etc/php/7.1/fpm/php.ini
 sed -i  s/'post_max_size = 8M'/'post_max_size = 100M'/ /etc/php/7.1/fpm/php.ini
@@ -209,22 +209,23 @@ cat /etc/motd
 Sysupdate(){
 Checkroot
 apt update
-systemctl stop php7.0-fpm nginx
+systemctl stop php7.1-fpm nginx
 apt -y full-upgrade
-systemctl start php7.0-fpm nginx
+systemctl start php7.1-fpm nginx
 apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
 }
 
 Vlmcsd(){
 Checkroot
 cd $rootpath
-git clone https://github.com/Wind4/vlmcsd
+git clone https://github.com/simonsmh/vlmcsd
 cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
-make
-install ./bin/* /usr/bin/
+dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
+dpkg -i ../vlmcsd_*.deb
+rm ../vlmcsd*.{buildinfo,changes,deb}
 }
 
 Ttyd(){
@@ -234,7 +235,7 @@ git clone https://github.com/tsl0922/ttyd
 cd ttyd
 git fetch
 git reset --hard origin/HEAD
-dpkg-buildpackage -b -uc -us
+dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
 dpkg -i ../ttyd_*.deb
 rm ../ttyd*.{buildinfo,changes,deb}
@@ -248,7 +249,7 @@ cd libwebsockets
 git fetch
 git reset --hard origin/debian-v2.0-stable
 sed -i 's/-DLWS_WITH_LIBUV=ON/-DLWS_WITH_LIBUV=ON -DLWS_IPV6=ON -DLWS_UNIX_SOCK=ON -DLWS_WITH_HTTP2=ON/g' debian/rules
-dpkg-buildpackage -b -uc -us
+dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
 dpkg -i ../libwebsockets-dev_*.deb ../libwebsockets8_*.deb
 rm ../libwebsockets*.{buildinfo,changes,deb}
@@ -264,7 +265,7 @@ git fetch
 git reset --hard origin/HEAD
 git submodule update --init --recursive
 ./autogen.sh
-dpkg-buildpackage -b -uc -us
+dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
 ## Obfs Plugin
 cd $rootpath
@@ -274,7 +275,7 @@ git fetch
 git reset --hard origin/HEAD
 git submodule update --init --recursive
 ./autogen.sh
-dpkg-buildpackage -b -uc -us
+dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
 ## Install
 cd $rootpath
