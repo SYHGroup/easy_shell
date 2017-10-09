@@ -241,6 +241,19 @@ dpkg -i ../ttyd_*.deb
 rm ../ttyd*.{buildinfo,changes,deb}
 }
 
+Rust(){
+Checkroot
+cd $rootpath
+git clone https://github.com/shadowsocks/shadowsocks-rust
+cd shadowsocks-rust
+git fetch
+git reset --hard origin/HEAD
+dpkg-buildpackage -rfakeroot -us -uc
+git clean -fdx
+dpkg -i ../shadowsocks-rust_*.deb
+rm ../shadowsocks-rust*.{buildinfo,changes,deb}
+}
+
 Libev(){
 Checkroot
 ## Libev
@@ -366,6 +379,7 @@ Usage:
 \t\t-u\t\tSystem update
 \t\t-v\t\tCompile Vlmcsd
 \t\t-t\t\tCompile Ttyd
+\t\t-sr\t\tCompile SS-Rust
 \t\t-sl\t\tCompile SS-Libev
 \t\t-sp\t\tCompile SS-Python
 \t\t-sg\t\tCompile SS-Go
@@ -410,6 +424,7 @@ case $arg in
 -u)Sysupdate;;
 -t)Ttyd;;
 -v)Vlmcsd;;
+-sr)Rust;;
 -sl)Libev;;
 -sp)Python;;
 -sg)Go;;
@@ -419,7 +434,7 @@ case $arg in
 #Shellbox
 -server)
 Vlmcsd &
-Python &
+Rust &
 wait
 ;;
 u|update|upgrade)
