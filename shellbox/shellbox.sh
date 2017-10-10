@@ -244,7 +244,7 @@ rm ../ttyd*.{buildinfo,changes,deb}
 Rust(){
 Checkroot
 cd $rootpath
-git clone https://github.com/simonsmh/shadowsocks-rust
+git clone https://github.com/shadowsocks/shadowsocks-rust
 cd shadowsocks-rust
 git fetch
 git reset --hard origin/HEAD
