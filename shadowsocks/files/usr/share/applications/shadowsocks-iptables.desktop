@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Shadowsocks-iptables
+GenericName=Shadowsocks-iptables
+Comment=Shadowsocks-iptables
+Exec=sudo ~/ss-iptables.sh
+Icon=shadowsocks
+Terminal=true
+Type=Application
+Categories=Network;
+StartupNotify=true
+Name[zh_CN]=Shadowsocks-iptables
