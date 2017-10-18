@@ -458,7 +458,7 @@ tmux new-session -d -s fishroom-smu -n core python3 -m fishroom.fishroom
 tmux new-window -t fishroom-smu -n telegram python3 -m fishroom.telegram
 tmux new-window -t fishroom-smu -n web python3 -m fishroom.web
 ;;
-killfishroom)
+killfishroom-smu)
 tmux kill-session -t fishroom-smu
 ;;
 RUN)
