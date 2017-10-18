@@ -452,6 +452,15 @@ tmux new-window -t fishroom -n web python3 -m fishroom.web
 killfishroom)
 tmux kill-session -t fishroom
 ;;
+fishroom-smu)
+export PYTHONPATH=/root/fishroom-smu
+tmux new-session -d -s fishroom-smu -n core python3 -m fishroom.fishroom
+tmux new-window -t fishroom-smu -n telegram python3 -m fishroom.telegram
+tmux new-window -t fishroom-smu -n web python3 -m fishroom.web
+;;
+killfishroom)
+tmux kill-session -t fishroom-smu
+;;
 RUN)
 `echo -n $* |sed -e 's/^RUN //g' |awk -F ' ' '{ print $0 }'`
 exit $?
