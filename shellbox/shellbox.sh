@@ -108,10 +108,10 @@ then
 apt -y install git mosh zsh powerline
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-cp -f ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+echo "source ~/.bashrc" > ~/.zshrc
+cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
 sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo zsh-syntax-highlighting command-not-found common-aliases debian gitfast gradle npm python repo screen systemd dircycle/g" ~/.zshrc
-echo "source ~/.bashrc" >> ~/.zshrc
 chsh -s /usr/bin/zsh
 elif [ $REPLY = 2 ]
 then
