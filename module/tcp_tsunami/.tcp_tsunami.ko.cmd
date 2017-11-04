@@ -1,1 +1,0 @@
-cmd_/root/easy_shell/module/tcp_tsunami/tcp_tsunami.ko := ld -r -m elf_x86_64 -T /usr/src/linux-headers-4.13.0-1-common/scripts/module-common.lds --build-id  -o /root/easy_shell/module/tcp_tsunami/tcp_tsunami.ko /root/easy_shell/module/tcp_tsunami/tcp_tsunami.o /root/easy_shell/module/tcp_tsunami/tcp_tsunami.mod.o ;  true
