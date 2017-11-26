@@ -189,7 +189,7 @@ else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-for motd in nginx.service mysql.service php7.1-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service shadowsocks-rust.service
+for motd in nginx.service mariadb.service php7.1-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service shadowsocks-rust.service
 do
 if systemctl is-active $motd
 then
@@ -392,7 +392,6 @@ Usage:
 \t\tRUN\t\tRun with parameter
 \t\tfishroom\tRun Fishroom
 \t\tkillfishroom\tKill Fishroom"
-exit 0
 }
 
 ########
@@ -400,7 +399,6 @@ exit 0
 ########
 for arg in "$@"
 do
-[ -z $1 ] && arg="help"
 case $arg in
 #Small Script
 -checkroot)Checkroot;;
@@ -440,8 +438,7 @@ wait
 u|update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
 wget --no-cache https://raw.githubusercontent.com/SYHGroup/easy_shell/master/shellbox/shellbox.sh -O shellbox.sh
-chmod +x shellbox.sh
-exit 0
+chmod +x shellbox.sh && exit 0
 ;;
 fishroom)
 export PYTHONPATH=/root/fishroom
@@ -469,9 +466,8 @@ exit $?
 Help
 ;;
 *)
-Help
-exit 1
+Help && exit 1
 ;;
 esac
 done
-exit 0
+[ -z "$1"] && Help && exit 1
