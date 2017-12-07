@@ -20,7 +20,11 @@ if [ "${OldIP}" = "${RecodIP}" ]
 then
 Result="Action skipped successfully"
 else
-Result=$(curl -X PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"A","name":"'${SubDomain}'.'${Domain}'","content":"'${RecodIP}'","ttl":1,"proxied":false}')
+Result=$(curl -X PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"A","name":"'${SubDomain}'.'${Domain}'","content":"'${RecodIP}'","ttl":1,"proxied":false}' |grep -Eo '"success"[^,]*,')
+if [ ${?} -ne 0 ]
+then
+Result='cURL failed.'
+fi
 fi
 if [ -x "$(command -v logger)" ]
 then
