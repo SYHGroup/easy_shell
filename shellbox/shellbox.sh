@@ -208,20 +208,24 @@ cat /etc/motd
 
 Sysupdate(){
 Checkroot
+[[ -z $(cat ~/.bashrc | grep "alias u") ]] && echo -e "alias u=\"$(cd "$(dirname "$0")"; pwd)/$0 -u\"" >> ~/.bashrc
+DEBIAN_FRONTEND=noninteractive
 apt update
-systemctl stop php7.1-fpm nginx
 apt -y full-upgrade
-systemctl start php7.1-fpm nginx
-apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
+systemctl restart php7.1-fpm nginx
+apt -y autoremove --purge
+unset DEBIAN_FRONTEND
+#apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
 }
 
 Vlmcsd(){
 Checkroot
 cd $rootpath
-git clone https://github.com/simonsmh/vlmcsd
+git clone https://github.com/Wind4/vlmcsd
 cd vlmcsd
 git fetch
 git reset --hard origin/HEAD
+git submodule update --init --recursive
 dpkg-buildpackage -rfakeroot -us -uc
 git clean -fdx
 dpkg -i ../vlmcsd_*.deb
@@ -442,18 +446,18 @@ chmod +x shellbox.sh && exit 0
 ;;
 fishroom)
 export PYTHONPATH=/root/fishroom
-tmux new-session -d -s fishroom -n core python3 -m fishroom.fishroom
-tmux new-window -t fishroom -n telegram python3 -m fishroom.telegram
-tmux new-window -t fishroom -n web python3 -m fishroom.web
+tmux new -d -s fishroom -n core python3 -m fishroom.fishroom
+tmux neww -t fishroom -n telegram python3 -m fishroom.telegram
+tmux neww -t fishroom -n web python3 -m fishroom.web
 ;;
 killfishroom)
 tmux kill-session -t fishroom
 ;;
 fishroom-smu)
 export PYTHONPATH=/root/fishroom-smu
-tmux new-session -d -s fishroom-smu -n core python3 -m fishroom.fishroom
-tmux new-window -t fishroom-smu -n telegram python3 -m fishroom.telegram
-tmux new-window -t fishroom-smu -n web python3 -m fishroom.web
+tmux new -d -s fishroom-smu -n core python3 -m fishroom.fishroom
+tmux neww -t fishroom-smu -n telegram python3 -m fishroom.telegram
+tmux neww -t fishroom-smu -n web python3 -m fishroom.web
 ;;
 killfishroom-smu)
 tmux kill-session -t fishroom-smu
