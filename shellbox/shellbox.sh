@@ -212,10 +212,10 @@ Checkroot
 DEBIAN_FRONTEND=noninteractive
 apt update
 apt -y full-upgrade
-systemctl restart php7.1-fpm nginx
+# systemctl restart php7.1-fpm nginx
 apt -y autoremove --purge
 unset DEBIAN_FRONTEND
-#apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
+# apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
 }
 
 Vlmcsd(){
@@ -438,6 +438,7 @@ case $arg in
 Vlmcsd &
 Rust &
 wait
+Sysupdate
 ;;
 u|update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
