@@ -438,7 +438,7 @@ case $arg in
 Vlmcsd &
 Rust &
 wait
-Sysupdate
+Sysupdate &
 ;;
 u|update|upgrade)
 cd $(cd "$(dirname "$0")"; pwd)
