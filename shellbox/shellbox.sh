@@ -95,8 +95,8 @@ Setgolang(){
 Checkroot
 apt install golang
 mkdir ~/go
-echo 'export GOPATH=$GOPATH:$HOME/go' >> ~/.bashrc
-echo 'export PATH=${PATH}:$GOPATH/bin' >> ~/.bashrc
+echo 'export GOPATH=~/go:${GOPATH}' >> ~/.bashrc
+echo 'export PATH=${PATH}:${GOPATH}/bin' >> ~/.bashrc
 source ~/.bashrc
 }
 
@@ -155,6 +155,7 @@ Github(){
 git config --global user.name "Simon Shi"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
+git config --global gpg.program gpg2
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 echo -e 'export GPG_TTY=$(tty)
