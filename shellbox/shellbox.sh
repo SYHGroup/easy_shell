@@ -476,4 +476,4 @@ Help && exit 1
 ;;
 esac
 done
-[ -z "$1"] && Help && exit 1
+[ -z "$1" ] && Help && exit 1
