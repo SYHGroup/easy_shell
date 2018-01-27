@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+china_ip_list=/etc/overture/china_ip_list.txt
 Checkroot(){
 if [[ $EUID != "0" ]]
 then
@@ -20,7 +21,7 @@ port=$(sed -n 's/.*"local_port":\([0-9]*\).*/\1/p' /etc/shadowsocks/$CONFIG.json
 # echo $ip $port $ENABLE
 if [ $ENABLE ]; then
 systemctl restart shadowsocks-libev-redir@$CONFIG.service
-ss-nat -s $ip -l $port -u -o
+ss-nat -s $ip -l $port -i $china_ip_list -u -o
 else
 systemctl stop shadowsocks-libev-redir@$CONFIG.service
 ss-nat -f
