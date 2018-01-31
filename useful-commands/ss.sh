@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 china_ip_list=/etc/overture/china_ip_list.txt
+china_gfw_list=/etc/overture/gfwlist.txt
 config_location=/etc/shadowsocks
 Ignorelist(){
 wget -qO- 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' | awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > /tmp/ignore.list
 [[ "$?" == "0" ]] && mv /tmp/ignore.list $china_ip_list || echo "Failed to update ignore list."
+}
+Gfwlist(){
+wget -q https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt -O /tmp/gfwlist.txt
+[[ "$?" == "0" ]] && mv /tmp/gfwlist.txt $china_gfw_list || echo "Failed to update gfwlist."
 }
 Checkroot(){
 if [[ $EUID != "0" ]]
@@ -28,6 +33,7 @@ port=$(sed -n 's/.*"local_port":\([0-9]*\).*/\1/p' $config_location/$CONFIG.json
 # echo $ip $port $ENABLE
 Ignorelist
 systemctl restart shadowsocks-libev-redir@$CONFIG.service
+systemctl restart overture.service
 ss-nat -s $ip -l $port -i $china_ip_list -u -o
 else
 systemctl stop shadowsocks-libev-redir@$CONFIG.service
