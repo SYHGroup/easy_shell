@@ -7,4 +7,4 @@
 * [x] Thinking
 
 ## Contributing
-* Copyright © 2017 SYHGroup
+* Copyright © 2018 SYHGroup
