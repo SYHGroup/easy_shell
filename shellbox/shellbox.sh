@@ -137,7 +137,7 @@ systemctl start x0vncserver@5901.service
 LNMP(){
 Checkroot
 apt install nginx-extras mariadb-client mariadb-server php7.2-[^dev,apcu]
-systemctl enable nginx mysql php7.2-fpm
+systemctl enable nginx mariadb php7.2-fpm
 sed -i  s/'upload_max_filesize = 2M'/'upload_max_filesize = 100M'/ /etc/php/7.2/fpm/php.ini
 sed -i  s/'post_max_size = 8M'/'post_max_size = 100M'/ /etc/php/7.2/fpm/php.ini
 sed -i  s/'short_open_tag = Off'/'short_open_tag = On'/ /etc/php/7.2/fpm/php.ini
@@ -149,6 +149,11 @@ sed -i  s/';opcache.fast_shutdown=0'/'opcache.fast_shutdown=1'/ /etc/php/7.2/fp
 sed -i  s/'zlib.output_compression = Off'/'zlib.output_compression = On'/ /etc/php/7.2/fpm/php.ini
 sed -i  s/';zlib.output_compression_level = -1'/'zlib.output_compression_level = 5'/ /etc/php/7.2/fpm/php.ini
 sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.2/fpm/php.ini
+#mysql -u root 
+#use mysql; 
+#update user set plugin='' where User='root'; 
+#flush privileges; 
+#exit; 
 }
 
 Github(){
@@ -190,7 +195,7 @@ else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-for motd in nginx.service mariadb.service php7.1-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service shadowsocks-rust.service
+for motd in nginx.service mariadb.service php7.2-fpm.service transmission-daemon.service shadowsocks-libev.service x0vncserver@5901.service vlmcsd.service shadowsocks-rust.service
 do
 if systemctl is-active $motd
 then
@@ -213,7 +218,6 @@ Checkroot
 DEBIAN_FRONTEND=noninteractive
 apt update
 apt -y full-upgrade
-# systemctl restart php7.1-fpm nginx
 apt -y autoremove --purge
 unset DEBIAN_FRONTEND
 # apt -y purge `dpkg -l |grep ^rc |awk '{print $2}'`
