@@ -136,19 +136,19 @@ systemctl start x0vncserver@5901.service
 
 LNMP(){
 Checkroot
-apt install nginx-extras mariadb-client mariadb-server php7.1-[^dev]
-systemctl enable nginx mysql php7.1-fpm
-sed -i  s/'upload_max_filesize = 2M'/'upload_max_filesize = 100M'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'post_max_size = 8M'/'post_max_size = 100M'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'short_open_tag = Off'/'short_open_tag = On'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'default_socket_timeout = 60'/'default_socket_timeout = 300'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'memory_limit = 128M'/'memory_limit = 64M'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/';opcache.enable=0'/'opcache.enable=1'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/';opcache.enable_cli=0'/'opcache.enable_cli=1'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/';opcache.fast_shutdown=0'/'opcache.fast_shutdown=1'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'zlib.output_compression = Off'/'zlib.output_compression = On'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/';zlib.output_compression_level = -1'/'zlib.output_compression_level = 5'/ /etc/php/7.1/fpm/php.ini
-sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.1/fpm/php.ini
+apt install nginx-extras mariadb-client mariadb-server php7.2-[^dev,apcu]
+systemctl enable nginx mysql php7.2-fpm
+sed -i  s/'upload_max_filesize = 2M'/'upload_max_filesize = 100M'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'post_max_size = 8M'/'post_max_size = 100M'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'short_open_tag = Off'/'short_open_tag = On'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'default_socket_timeout = 60'/'default_socket_timeout = 300'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'memory_limit = 128M'/'memory_limit = 64M'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/';opcache.enable=0'/'opcache.enable=1'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/';opcache.enable_cli=0'/'opcache.enable_cli=1'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/';opcache.fast_shutdown=0'/'opcache.fast_shutdown=1'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'zlib.output_compression = Off'/'zlib.output_compression = On'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/';zlib.output_compression_level = -1'/'zlib.output_compression_level = 5'/ /etc/php/7.2/fpm/php.ini
+sed -i  s/'allow_url_include = Off'/'allow_url_include = On'/ /etc/php/7.2/fpm/php.ini
 }
 
 Github(){
