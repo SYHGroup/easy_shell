@@ -222,7 +222,7 @@ def handle_adminlist_click(bot, update):
     try:
         args = data.split()
     except:
-        args = ["get"]
+        args = ["listadmins", "get"]
     if args[1] == "get":
         buttons = []
         chatmembers = bot.get_chat_administrators(chat_id=chat.id)
@@ -531,7 +531,7 @@ updater.dispatcher.add_handler(tg.CommandHandler('dig', dig, pass_args=True))
 updater.dispatcher.add_handler(tg.CommandHandler('ping', ping, pass_args=True))
 updater.dispatcher.add_handler(tg.CommandHandler('geoip', geoip, pass_args=True))
 updater.dispatcher.add_handler(tg.MessageHandler(tg.Filters.status_update, status_update))
-updater.dispatcher.add_handler(tg.CallbackQueryHandler(handle_chatinfo_click, pattern=r'chatinfo.*'))
+updater.dispatcher.add_handler(tg.CallbackQueryHandler(handle_chatinfo_click, pattern=r'chatinfo'))
 updater.dispatcher.add_handler(tg.CallbackQueryHandler(handle_link_click, pattern=r'link'))
 updater.dispatcher.add_handler(tg.CallbackQueryHandler(handle_adminlist_click, pattern=r'listadmins'))
 updater.dispatcher.add_handler(tg.MessageHandler(tg.Filters.text, text_handler, edited_updates=True))
