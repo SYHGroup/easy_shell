@@ -20,14 +20,14 @@ Record=$(curl -skX GET https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_
 # IPv4
 if ${USE_IPV4}
 then
-RecodIP4=$(curl -skX GET http://v4.ipv6-test.com/api/myip.php)
+RecodIP4=$(curl -skX GET members.3322.org/dyndns/getip)
 RecordID4=$(echo $Record | sed -n 's/.*"id":"\(.*\)","type":"[A]\+","name":"'${SubDomain}'.'${Domain}'".*/\1/p')
 OldIP4=$(echo $Record | sed -n 's/.*"type":"[A]\+","name":"'${SubDomain}'.'${Domain}'","content":"\([0-9.]*\)".*/\1/p')
     if [ "${OldIP4}" = "${RecodIP4}" ]
     then
     Result4="Skipped."
     else
-    Result4=$(curl -sX PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID4} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"A","name":"'${SubDomain}'.'${Domain}'","content":"'${RecodIP}'","ttl":1,"proxied":false}' |grep -Eo '"success"[^,]*,')
+    Result4=$(curl -sX PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID4} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"A","name":"'${SubDomain}'.'${Domain}'","content":"'${RecodIP4}'","ttl":1,"proxied":false}' |grep -Eo '"success"[^,]*,')
         if [ ${?} -ne 0 ]
         then
         Result4='cURL failed.'
@@ -44,7 +44,7 @@ OldIP6=$(echo $Record | sed -n 's/.*"type":"[AAAA]\+","name":"'${SubDomain}'.'${
     then
     Result6="Skipped."
     else
-    Result6=$(curl -sX PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID6} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"AAAA","name":"'${SubDomain6}'.'${Domain}'","content":"'${RecodIP6}'","ttl":1,"proxied":false}' |grep -Eo '"success"[^,]*,')
+    Result6=$(curl -sX PUT https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_records/${RecordID6} -H "Content-Type:application/json" -H "X-Auth-Email:${Email}" -H "X-Auth-Key:${APIKey}" --data '{"type":"AAAA","name":"'${SubDomain}'.'${Domain}'","content":"'${RecodIP6}'","ttl":1,"proxied":false}' |grep -Eo '"success"[^,]*,')
         if [ ${?} -ne 0 ]
         then
         Result6='cURL failed.'
