@@ -3,6 +3,7 @@
 from card import COLORS, SPECIALS
 from card import RED, BLUE, GREEN, YELLOW
 from random import choice, random
+from time import sleep
 
 def color_from_str(string):
     """Decodes a Card object from a string"""
@@ -25,7 +26,7 @@ def color_choice(deck):
     chosen_number = 0
     for color in (RED, BLUE, GREEN, YELLOW):
         if chosen_number <= sum[color]:
-            sum[color] = chosen_number
+            chosen_number = sum[color]
             chosen_color = color
     if chosen_number == 0 or chosen_color is None:
         chosen_color = choice((RED, BLUE, GREEN, YELLOW))
@@ -52,8 +53,32 @@ class Game():
         # draw, call_bluff, pass
         # call_bluff > draw
         self.choose_color = list()
+        self.joined = None #may be None or a a list of group entity
         self.is_playing = False
         self.anti_cheat = ''
+        self.delay = None
+    def join_game(self, group):
+        if self.joined is None:
+            self.joined = list()
+        if group in self.joined:
+            return True
+        self.joined.append(group)
+    def leave_game(self, group):
+        try:
+            if self.joined:
+                self.joined.remove(group)
+        except ValueError:
+            returnValue = False
+        else:
+            returnValue = True
+        if (self.joined is not None) and (not self.joined):
+            self.joined = None
+        return returnValue
+    def start_game(self):
+        self.is_playing = True
+    def stop_game(self):
+        self.is_playing = False
+        self.delay = None
     def clear_deck(self):
         self.deck = list()
         self.special = list()
@@ -81,6 +106,8 @@ class Game():
         else:
             self.deck.append(result_id)
     def play_card(self):
+        if self.delay:
+            sleep(self.delay)
         if len(self.choose_color):
             return color_choice(self.deck)
         elif len(self.deck):
