@@ -101,7 +101,7 @@ source ~/.bashrc
 }
 
 Setsh(){
-read -p "Choose your team: 1.zsh 2.fish "
+read -p "Choose your team: 1.zsh 2.fish 3.bash "
 sed -i s/required/sufficient/g /etc/pam.d/chsh
 if [ $REPLY = 1 ]
 then
@@ -121,6 +121,21 @@ mkdir -p ~/.config/fish/functions/
 wget https://github.com/fisherman/fisherman/raw/master/fisher.fish -O ~/.config/fish/functions/fisher.fish
 echo "source ~/.bashrc" >> ~/.config/fish/config.fish
 chsh -s /usr/bin/fish
+elif [ $REPLY = 3 ]
+then
+apt -y install git mosh bash powerline
+chsh -s /bin/bash
+rm -r ~/.bash_it
+git clone https://github.com/Bash-it/bash-it.git ~/.bash_it
+~/.bash_it/install.sh --silent
+echo "set colored-completion-prefix on
+set colored-stats on" >> ~/.inputrc
+sed -i "s/bobby/demula/g" ~/.bashrc
+sed -i "s/git@git.domain.com/git@github.com/g" ~/.bashrc
+sed -i "s/irssi//g" ~/.bashrc
+source ~/.bashrc
+bash-it disable plugin all && bash-it enable plugin alias-completion base git hub node plugin sshagent ssh subversion tmux 
+bash-it enable completion all && bash-it disable completion conda ng
 else
 echo "Bad syntax."
 fi
