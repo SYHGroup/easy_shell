@@ -38,6 +38,10 @@ nfs-utils \
 rsync \
 shadowsocks-libev
 
+wget https://github.com/SYHGroup/easy_shell/raw/master/ddns/CloudFlare-ddns.sh
+wget https://github.com/SYHGroup/easy_shell/raw/master/useful-commands/update_list
+wget https://github.com/cokebar/gfwlist2dnsmasq/raw/master/gfwlist2dnsmasq.sh
+
 echo "30 4 * * 0 /root/update_list >/dev/null 2>&1
 0 */3 * * * /root/CloudFlare-ddns.sh >/dev/null 2>&1
 #30 2 * * 0 opkg update && opkg upgrade `opkg list-upgradable | awk '{printf $1\" \"}'`" >> /etc/crontabs/root
