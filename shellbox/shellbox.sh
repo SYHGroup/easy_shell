@@ -112,9 +112,10 @@ echo "source ~/.bashrc" > ~/.zshrc
 cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
 sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo zsh-syntax-highlighting command-not-found common-aliases debian gitfast gradle npm python repo screen systemd dircycle/g" ~/.zshrc
-echo "source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-echo source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-echo source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+echo "[[ -f "/usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh" ]] && source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+[[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[[ -f "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+" >> ~/.zshrc
 chsh -s /usr/bin/zsh
 elif [ $REPLY = 2 ]
 then
