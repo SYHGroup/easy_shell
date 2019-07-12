@@ -214,7 +214,7 @@ else
 echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
 fi
 echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-for motd in nginx.service mariadb.service php7.2-fpm.service shadowsocks-libev.service vlmcsd.service mtproxy.service
+for motd in nginx.service mariadb.service php7.3-fpm.service shadowsocks-libev.service vlmcsd.service mtproxy.service
 do
 if systemctl is-active $motd
 then
