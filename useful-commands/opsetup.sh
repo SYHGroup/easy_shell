@@ -24,6 +24,7 @@ iptables-mod-tproxy \
 kmod-fs-nfs \
 kmod-fs-xfs \
 kmod-usb-storage-extras \
+kmod-ipt-nat6 \
 libmbedtls \
 luci-app-dns-forwarder \
 luci-app-nfs \
