@@ -26,7 +26,6 @@ kmod-fs-xfs \
 kmod-usb-storage-extras \
 kmod-ipt-nat6 \
 libmbedtls \
-luci-app-dns-forwarder \
 luci-app-nfs \
 luci-app-samba \
 luci-app-shadowsocks \
@@ -37,7 +36,8 @@ mount-utils \
 nfs-kernel-server-utils \
 nfs-utils \
 rsync \
-shadowsocks-libev
+shadowsocks-libev \
+stubby
 
 wget https://github.com/SYHGroup/easy_shell/raw/master/ddns/CloudFlare-ddns.sh
 wget https://github.com/SYHGroup/easy_shell/raw/master/useful-commands/update_list
