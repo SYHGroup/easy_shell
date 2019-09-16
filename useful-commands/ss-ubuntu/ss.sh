@@ -34,7 +34,6 @@ port=$(sed -n 's/.*"local_port":\([0-9]*\).*/\1/p' $config_location/$CONFIG.json
 echo $ip $port $ENABLE
 Ignorelist
 Gfwlist
-systemctl restart overture.service
 systemctl restart $systemd_service@$CONFIG.service
 ss-nat -s $ip -l $port -i $china_ip_list -u -o
 else
