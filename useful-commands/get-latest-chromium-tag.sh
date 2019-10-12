@@ -3,4 +3,18 @@ chromium_tag=$(curl -s 'https://api.github.com/repos/chromium/chromium/tags' | g
 
 echo "$chromium_tag" >&2
 
-echo "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromium_tag} Safari/537.36"
+ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromium_tag} Safari/537.36"
+echo "$ua"
+
+
+flags=("$HOME/.config/chromium-flags.conf" "$HOME/.config/chrome-flags.conf")
+for flag in "${flags[@]}"; do
+    if [ -e "$flag" ]; then
+        if grep -Eq '^--user-agent=' "$flag"; then
+            uae=${ua//\;/\\\;}
+            uae=${uae//\//\\\/}
+            sed -i "s/^--user-agent=.*$/--user-agent='${uae}'/g" "$flag"
+            echo "Modified ${flag}" >&2
+        fi
+    fi
+done
