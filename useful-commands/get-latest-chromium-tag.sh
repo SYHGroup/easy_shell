@@ -7,7 +7,7 @@ ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Ge
 echo "$ua"
 
 
-flags=("$HOME/.config/chromium-flags.conf" "$HOME/.config/chrome-flags.conf")
+flags=("$HOME/.config/chromium-flags.conf" "$HOME/.config/chrome-flags.conf" "$HOME/.config/chrome-dev-flags.conf")
 for flag in "${flags[@]}"; do
     if [ -e "$flag" ]; then
         if grep -Eq '^--user-agent=' "$flag"; then
