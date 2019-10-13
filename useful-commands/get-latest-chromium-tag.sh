@@ -4,8 +4,12 @@ chromium_tag=$(curl -s 'https://api.github.com/repos/chromium/chromium/tags' | g
 echo "$chromium_tag" >&2
 
 ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromium_tag} Safari/537.36"
-echo "$ua"
-
+if [ -z "$ua" ]; then
+    echo "Empty reply" >&2
+    exit 1
+else
+    echo "$ua"
+fi
 
 flags=("$HOME/.config/chromium-flags.conf" "$HOME/.config/chrome-flags.conf" "$HOME/.config/chrome-dev-flags.conf")
 for flag in "${flags[@]}"; do
