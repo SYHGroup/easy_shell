@@ -21,8 +21,8 @@ Record=$(curl -skX GET https://api.cloudflare.com/client/v4/zones/${ZoneID}/dns_
 if ${USE_IPV4}
 then
 RecodIP4=$(curl -skX GET members.3322.org/dyndns/getip)
-RecordID4=$(echo $Record | sed -n 's/.*"id":"\(.*\)","type":"[A]\+","name":"'${SubDomain}'.'${Domain}'".*/\1/p')
-OldIP4=$(echo $Record | sed -n 's/.*"type":"[A]\+","name":"'${SubDomain}'.'${Domain}'","content":"\([0-9.]*\)".*/\1/p')
+RecordID4=$(echo $Record | sed -n 's/.*"id":"\(.*\)","type":"A","name":"'${SubDomain}'.'${Domain}'".*/\1/p')
+OldIP4=$(echo $Record | sed -n 's/.*"type":"A","name":"'${SubDomain}'.'${Domain}'","content":"\([0-9.]*\)".*/\1/p')
     if [ "${OldIP4}" = "${RecodIP4}" ]
     then
     Result4="Skipped."
@@ -38,8 +38,8 @@ fi
 if ${USE_IPV6}
 then
 RecodIP6=$(curl -skX GET http://v6.ipv6-test.com/api/myip.php)
-RecordID6=$(echo $Record | sed -n 's/.*"id":"\(.*\)","type":"[AAAA]\+","name":"'${SubDomain}'.'${Domain}'".*/\1/p')
-OldIP6=$(echo $Record | sed -n 's/.*"type":"[AAAA]\+","name":"'${SubDomain}'.'${Domain}'","content":"\([^\"]*\)".*/\1/p')
+RecordID6=$(echo $Record | sed -n 's/.*"id":"\(.*\)","type":"AAAA","name":"'${SubDomain}'.'${Domain}'".*/\1/p')
+OldIP6=$(echo $Record | sed -n 's/.*"type":"AAAA","name":"'${SubDomain}'.'${Domain}'","content":"\([^\"]*\)".*/\1/p')
     if [ "${OldIP6}" = "${RecodIP6}" ]
     then
     Result6="Skipped."
