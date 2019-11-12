@@ -105,7 +105,7 @@ read -p "Choose your team: 1.zsh 2.fish 3.bash "
 sed -i s/required/sufficient/g /etc/pam.d/chsh
 if [ $REPLY = 1 ]
 then
-apt -y install git zsh zsh-syntax-highlighting
+apt -y install git zsh zsh-autosuggestions zsh-syntax-highlighting
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 echo "source ~/.bashrc" > ~/.zshrc
@@ -113,9 +113,9 @@ cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
 sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo command-not-found common-aliases debian gitfast gradle npm python systemd dircycle zsh-autosuggestions zsh-completions zsh-history-substring-search/g" ~/.zshrc
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
-echo "[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
+echo "[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
 chsh -s /usr/bin/zsh
 elif [ $REPLY = 2 ]
 then
