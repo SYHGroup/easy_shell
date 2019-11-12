@@ -105,21 +105,21 @@ read -p "Choose your team: 1.zsh 2.fish 3.bash "
 sed -i s/required/sufficient/g /etc/pam.d/chsh
 if [ $REPLY = 1 ]
 then
-apt -y install git mosh zsh powerline
+apt -y install git zsh zsh-syntax-highlighting
 rm -r ~/.oh-my-zsh
 git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 echo "source ~/.bashrc" > ~/.zshrc
 cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
-sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo zsh-syntax-highlighting command-not-found common-aliases debian gitfast gradle npm python repo screen systemd dircycle/g" ~/.zshrc
-echo "[[ -f "/usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh" ]] && source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-[[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-[[ -f "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-" >> ~/.zshrc
+sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo command-not-found common-aliases debian gitfast gradle npm python systemd dircycle zsh-autosuggestions zsh-completions zsh-history-substring-search/g" ~/.zshrc
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+echo "[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
 chsh -s /usr/bin/zsh
 elif [ $REPLY = 2 ]
 then
-apt -y install git mosh fish powerline
+apt -y install git fish
 rm -r ~/.config/fish/config.fish ~/.config/fish/functions/
 mkdir -p ~/.config/fish/functions/
 wget https://github.com/fisherman/fisherman/raw/master/fisher.fish -O ~/.config/fish/functions/fisher.fish
