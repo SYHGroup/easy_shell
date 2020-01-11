@@ -145,6 +145,16 @@ echo "Bad syntax."
 fi
 }
 
+Setautomaintenance(){
+Checkroot
+apt install -y unattended-upgrades
+sed -i "
+s|Unattended-Upgrade::Origins-Pattern {|Unattended-Upgrade::Origins-Pattern {\n\"o=*\"\;|g;
+s|//Unattended-Upgrade::Remove-Unused-Kernel-Packages|Unattended-Upgrade::Remove-Unused-Kernel-Packages|g;
+s|//Unattended-Upgrade::Remove-New-Unused-Dependencies|Unattended-Upgrade::Remove-New-Unused-Dependencies|g;
+" /etc/apt/apt.conf.d/50unattended-upgrades
+}
+
 Desktop(){
 Checkroot
 apt install -y tigervnc-scraping-server tigervnc-standalone-server tigervnc-xorg-extension xfce4 xfce4-goodies xorg fonts-noto
@@ -397,6 +407,7 @@ Usage:
 \t\t-setsysctl\tSet sysctl
 \t\t-setdns\t\tSet dns
 \t\t-setgolang\tSet golang
+\t\t-setam\t\tSet auto maintenance
 \t\t-setsh\t\tSet custome shell
 \t\t-setdesktop\tSet Xfce
 \t\t-lnmp\t\tNginx+Mariadb+PHP7
@@ -441,6 +452,7 @@ case $arg in
 -setdns)Setdns;;
 -setgolang)Setgolang;;
 -setsh)Setsh;;
+-setam)Setautomaintenance;;
 -setdesktop)Desktop;;
 -lnmp|LNMP)LNMP;;
 -gitpreset)Github;;
