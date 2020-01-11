@@ -93,11 +93,9 @@ resolvconf -u
 
 Setgolang(){
 Checkroot
-apt install golang
-mkdir ~/go
-echo 'export GOPATH=~/go:${GOPATH}' >> ~/.bashrc
-echo 'export PATH=${PATH}:${GOPATH}/bin' >> ~/.bashrc
-source ~/.bashrc
+apt install -y golang
+go env -w GOBIN=/usr/local/bin
+go env -w GOPATH=/opt/go
 }
 
 Setsh(){
@@ -111,7 +109,7 @@ git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 echo "source ~/.bashrc" > ~/.zshrc
 cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
 sed -i "s/robbyrussell/ys/g" ~/.zshrc
-sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo command-not-found common-aliases debian gitfast gradle npm python systemd dircycle zsh-autosuggestions zsh-completions zsh-history-substring-search/g" ~/.zshrc
+sed -i "s/git/git git-extras svn last-working-dir catimg encode64 urltools wd sudo command-not-found common-aliases debian gitfast gradle npm python systemd dircycle zsh-completions zsh-history-substring-search/g" ~/.zshrc
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
 git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
 echo "[[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -189,7 +187,6 @@ Github(){
 git config --global user.name "Simon Shi"
 git config --global user.email simonsmh@gmail.com
 git config --global credential.helper store
-git config --global gpg.program gpg2
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 echo -e 'export GPG_TTY=$(tty)
