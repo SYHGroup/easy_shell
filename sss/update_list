@@ -27,13 +27,18 @@ twimg.edgesuite.net\n' >> gfwdomain.txt
 for f in $EXTRADOMAINLIST; do
     echo $f >> gfwdomain.txt
 done
-sort -u gfwdomain.txt | sed -r 's#(.+)#server=/\1/'$DNS_IP'\#'$DNS_PORT'#g' > $FILE_DNSMASQ
-rm gfwdomain.txt
+sort -u gfwdomain.txt -o gfwdomain.txt > /dev/null
+less gfwdomain.txt | sed -r 's#(.+)#server=/\1/'$DNS_IP'\#'$DNS_PORT'#g' > $FILE_DNSMASQ
 mv -f ./$FILE_DNSMASQ $DNSMASQ
+[[ -d /etc/smartdns ]] && { less gfwdomain.txt | sed -r 's#(.+)#server /\1/global#g'> address.conf && mv -f ./address.conf /etc/smartdns/address.conf; }
+rm gfwdomain.txt
 
 if [ -f /etc/openwrt_release ]; then
     if pidof ss-redir>/dev/null; then
         /etc/init.d/shadowsocks rules
+    fi
+    if pidof smartdns>/dev/null; then
+        /etc/init.d/smartdns reload
     fi
     if pidof dnsmasq>/dev/null; then
         /etc/init.d/dnsmasq reload
