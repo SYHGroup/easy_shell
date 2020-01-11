@@ -145,12 +145,19 @@ fi
 
 Setautomaintenance(){
 Checkroot
-apt install -y unattended-upgrades
+apt install -y unattended-upgrades needrestart
 sed -i "
 s|Unattended-Upgrade::Origins-Pattern {|Unattended-Upgrade::Origins-Pattern {\n\"o=*\"\;|g;
 s|//Unattended-Upgrade::Remove-Unused-Kernel-Packages|Unattended-Upgrade::Remove-Unused-Kernel-Packages|g;
 s|//Unattended-Upgrade::Remove-New-Unused-Dependencies|Unattended-Upgrade::Remove-New-Unused-Dependencies|g;
 " /etc/apt/apt.conf.d/50unattended-upgrades
+}
+
+Setmotd(){
+Checkroot
+wget https://github.com/SYHGroup/easy_shell/raw/master/shellbox/99-shellbox -O /etc/update-motd.d/99-shellbox
+chmod +x /etc/update-motd.d/99-shellbox
+run-parts /etc/update-motd.d
 }
 
 Desktop(){
@@ -208,35 +215,6 @@ systemctl enable ssserver shadowsocks-libev
 ########
 #Production Server Automatic Update
 ########
-
-Updatemotd(){
-Checkroot
-local AVAILABLE_MEM=$(free -h |sed -n '2p' |awk '{print $7}')
-local DISK_FREE=$(df / -h |sed -n '2p' |awk '{print $4}')
-local XDG_RUNTIME_DIR=/run/user/$(id -u)
-apt update 2>&1 |sed -n '$p' > /etc/motd
-if grep -Fq 'G' <<< $DISK_FREE ; then
-echo -e "\e[37;44;1m存储充足: \e[0m\e[37;42;1m ${DISK_FREE} \e[0m" >> /etc/motd
-else
-echo -e "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m ${DISK_FREE} \e[0m" >> /etc/motd
-fi
-echo -e "\e[37;44;1m可用内存: \e[0m\e[37;42;1m ${AVAILABLE_MEM} \e[0m" >>/etc/motd
-for motd in nginx.service mariadb.service php7.3-fpm.service shadowsocks-libev.service vlmcsd.service mtproxy.service
-do
-if systemctl is-active $motd
-then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;42;1m 正常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
-elif systemctl is-failed $motd
-then
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;41;1m 异常 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
-else
-echo -e "\e[37;44;1m$motd 状态: \e[0m\e[37;43;1m 退出 \e[0m\n"`systemctl status $motd |sed -n '$p'` >> /etc/motd
-fi &
-done
-wait
-echo -e "\e[37;40;4m上次执行: \e[0m"`date` >> /etc/motd
-cat /etc/motd
-}
 
 Sysupdate(){
 Checkroot
@@ -405,6 +383,7 @@ Usage:
 \t\t-setdns\t\tSet dns
 \t\t-setgolang\tSet golang
 \t\t-setam\t\tSet auto maintenance
+\t\t-setmotd\t\tSet motd
 \t\t-setsh\t\tSet custome shell
 \t\t-setdesktop\tSet Xfce
 \t\t-lnmp\t\tNginx+Mariadb+PHP7
@@ -450,12 +429,12 @@ case $arg in
 -setgolang)Setgolang;;
 -setsh)Setsh;;
 -setam)Setautomaintenance;;
+-setmotd)Setmotd;;
 -setdesktop)Desktop;;
 -lnmp|LNMP)LNMP;;
 -gitpreset)Github;;
 -sspreset)SSPreset;;
 #Production Server Automatic Update
--m)Updatemotd;;
 -u)Sysupdate;;
 -t)Ttyd;;
 -v)Vlmcsd;;

@@ -1,0 +1,10 @@
+#!/bin/sh
+echo "\e[37;44;1m欢迎登陆: \e[0m\e[37;42;1m $(whoami) \e[0m"
+if df / -h |sed -n '2p' |awk '{print $4}'|grep -Fq 'G' ; then
+echo "\e[37;44;1m存储充足: \e[0m\e[37;42;1m $(df / -h|sed -n '2p' |awk '{print $4}') \e[0m"
+else
+echo "\e[37;44;1m存储爆炸: \e[0m\e[37;41;1m $(df / -h|sed -n '2p' |awk '{print $4}') \e[0m"
+fi
+echo "\e[37;44;1m可用内存: \e[0m\e[37;42;1m $(free -h --si|sed -n '2p' |awk '{print $7}') \e[0m"
+systemctl list-units --all nginx.service mariadb.service mtproxy.service php7.4-fpm.service shadowsocks-libev.service shadowsocks-libev-manager.service shadowsocks-libev-redir@config.service shadowsocks-libev-server@config-v2ray.service shadowsocks-libev-server@config-v2ray-quic.service vlmcsd.service | head -n -7 | tail +2 | sort | awk '{ if ($4 == "running") print "\033[37;44;1m"$1" 状态: \033[0m\033[37;42;1m 正常 \033[0m";else print "\033[37;44;1m"$1" 状态: \033[0m\033[37;41;1m 异常 \033[0m" }'
+echo "\e[37;40;4m上次执行: \e[0m$(date)"
