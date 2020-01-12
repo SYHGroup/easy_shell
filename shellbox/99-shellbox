@@ -16,7 +16,8 @@ shadowsocks-libev-manager.service \
 shadowsocks-libev-redir@config.service \
 shadowsocks-libev-server@config-v2ray.service \
 shadowsocks-libev-server@config-v2ray-quic.service \
-vlmcsd.service | \
+vlmcsd.service \
+trojan.service | \
 head -n -7 | tail +2 | sort | \
 awk '{  if ($4 == "running")
 print "\033[37;44;1m"$1" 状态: \033[0m\033[37;42;1m 正常 \033[0m";
