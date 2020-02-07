@@ -40,8 +40,13 @@ DNSMASQ=/etc/NetworkManager/dnsmasq.d/dnsmasq_gfwlist.conf
 
 
 2. 修改**可能会引起冲突**的配置
+- 修改`systemd-resolved`配置，避免与Dnsmasq服务冲突。
+```shell
+sed -i "s/#DNSStubListener=yes/DNSStubListener=no/g" /etc/systemd/resolved.conf
+systemctl restart systemd-resolved
+```
 
-- 修改`/etc/stubby/stubby.xml`端口配置，避免冲突。
+- 修改`/etc/stubby/stubby.xml`端口配置，避免与Dnsmasq服务冲突。
 ```yaml
 ...
 # Set the listen addresses for the stubby DAEMON. This specifies localhost IPv4
@@ -69,6 +74,24 @@ tls_auth_name: "dns.google"
 DNS_PORT=5453
 ```
 这样`stubby`即可作为`dnsmasq`的上游正常工作。当然也可以使用无污染服务器提供的地址。
+
+- 确保`/etc/resolv.conf`配置为NetworkManager调用Dnsmasq监听的地址。
+```
+nameserver 127.0.0.1
+```
+
+检查服务运行情况
+```
+sudo ss -tlnp
+```
+需要返回如下信息方说明正常工作，`NetworkManager(user level) -> Dnsmasq(53) -> stubby(5300)`：
+```
+# simonsmh @ XPS15 in ~ [15:51:09]
+$ sudo ss -tlnp
+State      Recv-Q     Send-Q         Local Address:Port           Peer Address:Port     Process
+LISTEN     0          16                 127.0.0.1:5300                0.0.0.0:*         users:(("stubby",pid=1903,fd=4))
+LISTEN     0          32                 127.0.0.1:53                  0.0.0.0:*         users:(("dnsmasq",pid=1907,fd=5))
+```
 
 3. 运行`update_list`以更新`chnroute`和`gfwlist`列表
 ```
