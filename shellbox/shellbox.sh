@@ -40,6 +40,12 @@ rm /var/cache/apt/archives/lock
 rm /var/lib/dpkg/lock
 }
 
+DisableResolvedListener(){
+sed -i "s/#DNSStubListener=yes/DNSStubListener=no/g" /etc/systemd/resolved.conf
+systemctl restart systemd-resolved.service
+}
+
+
 ########
 #Server Preset
 ########
@@ -158,6 +164,15 @@ Checkroot
 wget https://github.com/SYHGroup/easy_shell/raw/master/shellbox/99-shellbox -O /etc/update-motd.d/99-shellbox
 chmod +x /etc/update-motd.d/99-shellbox
 run-parts /etc/update-motd.d
+}
+
+SetLimit(){
+if grep "^\*" /etc/security/limits.conf
+then
+echo "* soft nofile 65535
+* hard nofile 65535" > /etc/security/limits.conf
+fi
+sed -i "s/^#DefaultLimitNOFILE=.*/DefaultLimitNOFILE=1048576:1048576/g" /etc/systemd/system.conf
 }
 
 Desktop(){
@@ -375,6 +390,7 @@ Usage:
 \t\t-sshroot\tEnable ssh for root
 \t\t-ipv6\t\tSwitch ipv6
 \t\t-saveapt\tSave apt/dpkg lock
+\t\t-resolved\tDisable Stub Listener
 \tServer Preset:
 \t\t-stable\t\tApt stable sources
 \t\t-testing\tApt testing sources
@@ -383,7 +399,8 @@ Usage:
 \t\t-setdns\t\tSet dns
 \t\t-setgolang\tSet golang
 \t\t-setam\t\tSet auto maintenance
-\t\t-setmotd\t\tSet motd
+\t\t-setmotd\tSet motd
+\t\t-setlimit\tSet nofile limit
 \t\t-setsh\t\tSet custome shell
 \t\t-setdesktop\tSet Xfce
 \t\t-lnmp\t\tNginx+Mariadb+PHP7
@@ -420,6 +437,7 @@ case $arg in
 -sshroot)Sshroot;;
 -ipv6)Switchipv6;;
 -saveapt)Saveapt;;
+-resolved)DisableResolvedListener;;
 #Server Preset
 -stable)Aptstablesources;;
 -testing)Apttestingsources;;
@@ -429,6 +447,7 @@ case $arg in
 -setgolang)Setgolang;;
 -setsh)Setsh;;
 -setam)Setautomaintenance;;
+-setlimit)SetLimit;;
 -setmotd)Setmotd;;
 -setdesktop)Desktop;;
 -lnmp|LNMP)LNMP;;
