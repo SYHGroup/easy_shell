@@ -44,6 +44,9 @@ parser.add_argument('address')
 parser.add_argument('-6', '--ipv6', action='store_true', help='Use IPv6')
 parser.add_argument('-o', '--output', default='mtrp.txt', help='Output file')
 parser.add_argument('--tsu', action='store_true', help='Use tsu -c mtr in termux')
+parser.add_argument('-T', '--tcp', action='store_true', help='Use TCP')
+parser.add_argument('-u', '--udp', action='store_true', help='Use UDP')
+parser.add_argument('-P', '--port', default='443', help='TCP or UDP port')
 args = parser.parse_args()
 if args.ipv6:
     inetfamily=socket.AF_INET6
@@ -61,6 +64,10 @@ print('Started at', time.strftime("%Y%m%d %H:%M:%S", time.localtime()))
 MTRARGS = ['mtr', '-n', '-c', '2147483646', '-l', '-i', '10']
 if args.tsu:
     MTRARGS = ['tsu', '-c'] + MTRARGS
+if args.tcp:
+    MTRARGS.extend(['-T', '-P', args.port])
+elif args.udp:
+    MTRARGS.extend(['-u', '-P', args.port])
 
 class Hop:
     def __init__(self):
@@ -104,6 +111,7 @@ class MtrRawData:
         self._rhopidx = 0
         self._tmtrid = ""
         self._rmtrid = ""
+        self._lastrecv = -1
         self._starttime = 0
         self._messages = ""
         self._msgtime = 0.0
@@ -223,8 +231,12 @@ class MtrRawData:
             while len(self._hops) < hopidx + 1:
                 self._hops.append(Hop())
             if self._tmtrid and self._tmtrid != self._rmtrid: # last transfer was not received
-                self._hops[self._thopidx].alive = False
-                self._hops[self._thopidx].tmdata.append(-1)
+                if self._lastrecv == self._thopidx:
+                    self.show_msg(f"Duplicate addnone {text=}")
+                else:
+                    self._hops[self._thopidx].alive = False
+                    self._hops[self._thopidx].tmdata.append(-1)
+                    self._lastrecv = self._thopidx
             self._hops[hopidx].send()
             self._thopidx = hopidx
             self._tmtrid = mtrid
@@ -243,9 +255,13 @@ class MtrRawData:
             (hopidx, ms) = (int(hopidx), int(ms))
             if self.maxhopidx and hopidx > self.maxhopidx:
                 return
-            self._hops[hopidx].alive = True
-            self._hops[hopidx].recv(ms)
-            self._hops[hopidx].tmdata.append(ms)
+            if self._lastrecv == self._thopidx:
+                self.show_msg(f"Duplicate recv {text=}")
+            else:
+                self._hops[hopidx].alive = True
+                self._hops[hopidx].recv(ms)
+                self._hops[hopidx].tmdata.append(ms)
+                self._lastrecv = self._thopidx
             lhopidx = len(self._hops) - 1 if hopidx == 0 else hopidx - 1
             while lhopidx != hopidx and \
                 len(self._hops[lhopidx].tmdata) < len(self._hops[hopidx].tmdata) - (1 if hopidx == 0 else 0):
