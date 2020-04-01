@@ -43,8 +43,6 @@ class ThreadingPool:
                 self.__acknowledgelock.release() # acknowledge, the thread may end now
                 self.__running -= 1
     def __inside_tr(self, taskdict):
-        lock = taskdict.get('lock')
-        func = taskdict.get('func')
         args = taskdict.get('args')
         try:
             taskdict['ret'] = self.__func(*args)
