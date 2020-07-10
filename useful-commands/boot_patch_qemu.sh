@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 # Requirements:
 # QEMU arm  magiskinit64
 # x86       magiskboot curl unzip
@@ -8,9 +8,9 @@ KEEPVERITY=true
 KEEPFORCEENCRYPT=true
 RECOVERYMODE=false
 ######
-[ -f magisk-release.zip ] || wget https://github.com/topjohnwu/magisk_files/raw/canary/magisk-release.zip -O magisk-release.zip
-unzip magisk-release.zip x86/magiskboot
-unzip magisk-release.zip arm/magiskinit64
+[ -f magisk.zip ] || wget https://github.com/topjohnwu/magisk_files/raw/canary/magisk-debug.zip -O magisk.zip
+unzip magisk.zip x86/magiskboot
+unzip magisk.zip arm/magiskinit64
 mv x86/magiskboot ./
 mv arm/magiskinit64 ./
 rmdir x86 arm
