@@ -6,26 +6,13 @@
 # place this script inside /livecd
 # run this script
 # grub command:
-#   cat livecd/archiso-x86_64.conf
+#   cat livecd/archiso-x86_64-linux.conf
 #   set root=(xxx)
-#   linux /livecd/vmlinuz archisobasedir=livecd archisolabel=YOUR_LABEL
-#   initrd /livecd/YOUR_ucode.img
-#   initrd /livecd/archiso.img
+#   linux /livecd/vmlinuz-linux archisobasedir=livecd archisolabel=YOUR_LABEL
+#   initrd /livecd/amd-ucode.img
+#   initrd /livecd/intel-ucode.img
+#   initrd /livecd/initramfs-linux.img
 #   boot
-
-#[jerry@jerry livecd]$  tree /livecd
-#/livecd
-#├── 2019-04-01
-#├── amd_ucode.img
-#├── archiso.img
-#├── archiso-x86_64.conf
-#├── default.network
-#├── intel_ucode.img
-#├── vmlinuz
-#└── x86_64
-#    ├── airootfs.sfs
-#    ├── airootfs.sfs.sig
-#    └── airootfs.sha512
 
 die() {
     echo $@
@@ -33,7 +20,7 @@ die() {
 }
 read -p 'Place this script inside a empty dir. [Enter]'
 
-MIRROR="https://mirrors.tuna.tsinghua.edu.cn/archlinux"
+MIRROR="https://mirrors.ustc.edu.cn/archlinux"
 ISO_DIR="iso/latest"
 MD5SUM="${MIRROR}/${ISO_DIR}/md5sums.txt"
 
@@ -58,10 +45,10 @@ $SUDO mount -o loop,ro ${ISO} mnt || die "mount failed"
 
 echo "copying..."
 DST='./'
-cp mnt/arch/boot/{amd_ucode.img,intel_ucode.img} ${DST}
+cp mnt/arch/boot/{amd-ucode.img,intel-ucode.img} ${DST}
 cp -R mnt/arch/x86_64 ${DST}
-cp mnt/arch/boot/x86_64/{archiso.img,vmlinuz} ${DST}
-cp mnt/loader/entries/archiso-x86_64.conf ${DST}
+cp mnt/arch/boot/x86_64/{initramfs-linux.img,vmlinuz-linux} ${DST}
+cp mnt/loader/entries/archiso-x86_64-linux.conf ${DST}
 echo "done copying"
 
 $SUDO umount mnt && echo "unmount successful" || echo "!! unmount failed"
