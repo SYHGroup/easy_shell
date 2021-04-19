@@ -157,6 +157,8 @@ s|Unattended-Upgrade::Origins-Pattern {|Unattended-Upgrade::Origins-Pattern {\n\
 s|//Unattended-Upgrade::Remove-Unused-Kernel-Packages|Unattended-Upgrade::Remove-Unused-Kernel-Packages|g;
 s|//Unattended-Upgrade::Remove-New-Unused-Dependencies|Unattended-Upgrade::Remove-New-Unused-Dependencies|g;
 " /etc/apt/apt.conf.d/50unattended-upgrades
+echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+dpkg-reconfigure -f noninteractive unattended-upgrades
 }
 
 Setmotd(){
