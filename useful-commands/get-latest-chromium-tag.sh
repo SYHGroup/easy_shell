@@ -17,8 +17,12 @@ for flag in "${flags[@]}"; do
         if grep -Eq '^--user-agent=' "$flag"; then
             uae=${ua//\;/\\\;}
             uae=${uae//\//\\\/}
+            tflag=$(mktemp -p /tmp chromium-flags.confXXXXXX)
+            cp "$flag" "$tflag"
             sed -i "s/^--user-agent=.*$/--user-agent='${uae}'/g" "$flag"
+            diff -u "$tflag" "$flag"
             echo "Modified ${flag}" >&2
+            rm "$tflag"
         fi
     fi
 done
